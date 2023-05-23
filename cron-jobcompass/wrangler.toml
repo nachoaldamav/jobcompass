@@ -1,0 +1,6 @@
+name = "cron-jobcompass"
+main = "src/index.ts"
+compatibility_date = "2023-05-23"
+
+[triggers]
+crons = [ "1 * * * *" ]

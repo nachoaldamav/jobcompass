@@ -1,0 +1,5 @@
+packages:
+  - 'website'
+  - 'worker'
+  - 'auth-adapter'
+  - 'cron-jobcompass'

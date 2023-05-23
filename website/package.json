@@ -1,0 +1,35 @@
+{
+  "name": "infojobs-hackathon",
+  "version": "0.1.0",
+  "private": true,
+  "scripts": {
+    "dev": "next dev",
+    "build": "next build",
+    "start": "next start",
+    "lint": "next lint"
+  },
+  "dependencies": {
+    "@graywolfai/react-heroicons": "2.0.1",
+    "@heroicons/react": "1.0.6",
+    "@planetscale/database": "1.7.0",
+    "@tremor/react": "2.7.0",
+    "@types/node": "20.1.6",
+    "@types/react": "18.2.6",
+    "@types/react-dom": "18.2.4",
+    "autoprefixer": "10.4.14",
+    "axios": "^1.4.0",
+    "eslint": "8.40.0",
+    "eslint-config-next": "13.4.2",
+    "infojobs-auth-adapter": "workspace:*",
+    "next": "13.4.3",
+    "next-auth": "4.22.1",
+    "playwright-aws-lambda": "0.10.0",
+    "playwright-core": "1.33.0",
+    "postcss": "8.4.23",
+    "react": "18.2.0",
+    "react-dom": "18.2.0",
+    "tailwind-merge": "1.12.0",
+    "tailwindcss": "3.3.2",
+    "typescript": "5.0.4"
+  }
+}

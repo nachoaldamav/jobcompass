@@ -1,0 +1,35 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+.homeGradientA {
+  background-image: url('https://grainy-gradients.vercel.app/noise.svg'),
+    conic-gradient(#4d07e3, #4c00ff, #7fcef3);
+}
+
+.homeGradientB {
+  mix-blend-mode: normal;
+  filter: blur(50px);
+  will-change: filter;
+}
+
+@keyframes swing {
+  0% {
+    transform: rotate(0deg);
+  }
+  20% {
+    transform: rotate(10deg);
+  }
+  40% {
+    transform: rotate(-10deg);
+  }
+  60% {
+    transform: rotate(10deg);
+  }
+  80% {
+    transform: rotate(-10deg);
+  }
+  100% {
+    transform: rotate(0deg);
+  }
+}

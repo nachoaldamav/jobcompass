@@ -1,0 +1,30 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+:root {
+  --foreground-rgb: 255, 255, 255;
+  --background-start-rgb: 20, 21, 33;
+  --background-end-rgb: 20, 21, 33;
+}
+
+body {
+  color: rgb(var(--foreground-rgb));
+  background: linear-gradient(
+      to bottom,
+      transparent,
+      rgb(var(--background-end-rgb))
+    )
+    rgb(var(--background-start-rgb));
+}
+
+.homeGradientA {
+  background-image: url('https://grainy-gradients.vercel.app/noise.svg'),
+    conic-gradient(#4d07e3, #4c00ff, #7fcef3);
+}
+
+.homeGradientB {
+  mix-blend-mode: normal;
+  filter: blur(150px);
+  will-change: filter;
+}

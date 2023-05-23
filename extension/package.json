@@ -1,0 +1,36 @@
+{
+  "name": "infojobs-tracker-extension",
+  "version": "0.0.1",
+  "description": "",
+  "scripts": {
+    "build": "pnpm clean && parcel build manifest.json src/content.tsx",
+    "clean": "rimraf dist",
+    "dev": "nodemon --watch manifest.json --watch src/**/*.{ts,tsx} --exec \"parcel build manifest.json src/content.tsx\""
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "devDependencies": {
+    "@parcel/config-webextension": "^2.8.3",
+    "@types/animejs": "^3.1.7",
+    "@types/canvas-confetti": "^1.6.0",
+    "@types/chrome": "^0.0.236",
+    "@types/react": "18.2.6",
+    "@types/react-dom": "18.2.4",
+    "autoprefixer": "10.4.14",
+    "parcel": "^2.8.3",
+    "postcss": "8.4.23",
+    "rimraf": "^5.0.1",
+    "tailwindcss": "3.3.2",
+    "typescript": "5.1.0-beta"
+  },
+  "dependencies": {
+    "animejs": "^3.2.1",
+    "canvas-confetti": "^1.6.0",
+    "react": "18.2.0",
+    "react-dom": "18.2.0",
+    "react-router-dom": "^6.11.2",
+    "sonner": "^0.3.5",
+    "tailwind-merge": "1.12.0"
+  }
+}
