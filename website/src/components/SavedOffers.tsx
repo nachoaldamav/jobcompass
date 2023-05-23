@@ -17,23 +17,18 @@ export function SavedOffers({ offer }: SavedOffersProps): React.ReactElement {
   return (
     <Link
       key={offer.AlertId}
-      className="inline-flex gap-2 w-full p-4 rounded-lg bg-gray-800/50 shadow-md backdrop-filter backdrop-blur-sm hover:bg-gray-800/70 transition duration-300 ease-in-out"
+      className="grid grid-cols-12 gap-2 w-full p-4 rounded-lg bg-gray-800/50 shadow-md backdrop-filter backdrop-blur-sm hover:bg-gray-800/70 transition duration-300 ease-in-out"
       href={`/offer/${offer.OfferId}`}
     >
       <Image
         src={offer.offer.profile.logoUrl || '/infojobs.png'}
         alt={offer.offer.profile.name}
-        width={50}
         height={50}
+        width={50}
         className="rounded-xl col-span-1"
       />
-      <div
-        className="flex flex-col items-start justify-start gap-2"
-        style={{
-          gridColumn: 'span 15 / span 15',
-        }}
-      >
-        <h3 className="text-lg font-bold text-left truncate max-w-full">
+      <div className="flex flex-col items-start justify-start gap-2 col-span-11">
+        <h3 className="text-lg font-bold text-left truncate w-full max-w-full">
           {offer.offer.title}
         </h3>
         <span className="text-sm font-semibold text-left">

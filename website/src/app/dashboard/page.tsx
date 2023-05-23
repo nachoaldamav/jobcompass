@@ -52,24 +52,29 @@ export default async function Dashboard() {
     `https://api.jobcompass.dev/alerts/${currentUser.key}`
   ).then((response) => response.json());
 
-  const alertsInfo = await Promise.all(
-    alerts
-      .sort((a: any, b: any) => {
-        return (
-          new Date(b.CreationDate).getTime() -
-          new Date(a.CreationDate).getTime()
-        );
-      })
-      .map(async (alert: any) => {
-        const offer: SingleOffer = await infojobsInstance.getOffer(
-          alert.OfferId
-        );
-        return {
-          ...alert,
-          offer,
-        };
-      })
-  );
+  const alertsOffers = await fetch(`https://api.jobcompass.dev/offers`, {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json',
+    },
+    body: JSON.stringify({
+      offers: alerts.map((alert: any) => alert.OfferId),
+    }),
+  }).then((response) => response.json());
+
+  const alertsInfo = alertsOffers
+    .map((offer: any) => {
+      const alert = alerts.find((alert: any) => alert.OfferId === offer.id);
+      return {
+        ...alert,
+        offer,
+      };
+    })
+    .sort((a: any, b: any) => {
+      return (
+        new Date(b.CreationDate).getTime() - new Date(a.CreationDate).getTime()
+      );
+    });
 
   await getOrCreateUser(
     currentUser.key,
@@ -120,7 +125,7 @@ export default async function Dashboard() {
             </div>
           </div>
           <div className="flex flex-col items-center justify-center mt-10 w-1/2">
-            <h3 className="text-xl font-bold text-left">Ofertas aplicadas</h3>
+            <h3 className="text-xl font-bold text-left">Candidaturas</h3>
             {[].length === 0 && (
               <div className="flex flex-col items-center justify-center w-full mt-10 gap-2 border border-gray-500 rounded-lg p-4 h-72 border-dashed bg-gray-800/40">
                 <span className="text-lg font-semibold text-center">

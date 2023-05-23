@@ -25,7 +25,7 @@ const routes: RouteObject[] = [
             borderRadius: '100%',
           }}
         />
-        <Toaster />
+        <Toaster theme="dark" />
         <Outlet />
       </div>
     ),

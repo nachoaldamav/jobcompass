@@ -121,6 +121,28 @@ app.post('/user', async (c) => {
   }
 });
 
+app.post('/offers', async (c) => {
+  const body = await c.req.json();
+
+  const offersList = body.offers;
+
+  const offers = await Promise.all(
+    offersList.map(async (offer: string) => {
+      const res = await fetch(`https://api.infojobs.net/api/7/offer/${offer}`, {
+        headers: {
+          Authorization: `Basic ${c.env.INFOJOBS_BASIC_AUTH}`,
+          Accept: 'application/json',
+          'Content-Type': 'application/json',
+        },
+      }).then((res) => res.json());
+
+      return res;
+    })
+  );
+
+  return c.json(offers);
+});
+
 app.get('/offer/:id', async (c) => {
   const id = c.req.param('id');
   const res = await fetch(`https://api.infojobs.net/api/7/offer/${id}`, {
