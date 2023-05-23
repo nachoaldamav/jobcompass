@@ -2,10 +2,8 @@ import React from 'react';
 import ReactDOM from 'react-dom';
 import {
   RouterProvider,
-  createMemoryRouter,
   RouteObject,
   Outlet,
-  createBrowserRouter,
   createHashRouter,
 } from 'react-router-dom';
 import Root from './views';

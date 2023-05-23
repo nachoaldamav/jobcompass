@@ -1,6 +1,4 @@
 import React, { useEffect, useState } from 'react';
-import { Toaster } from 'sonner';
-import { SyncExtension } from '../components/syncApiKey';
 import infojobsLogo from '../infojobs.png';
 import { Link } from 'react-router-dom';
 import { Offer } from '../components/offerData';
