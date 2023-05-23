@@ -23,8 +23,6 @@
     "infojobs-auth-adapter": "workspace:*",
     "next": "13.4.3",
     "next-auth": "4.22.1",
-    "playwright-aws-lambda": "0.10.0",
-    "playwright-core": "1.33.0",
     "postcss": "8.4.23",
     "react": "18.2.0",
     "react-dom": "18.2.0",
