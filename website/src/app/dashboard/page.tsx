@@ -48,6 +48,13 @@ export default async function Dashboard() {
 
   const currentUser = await infojobsInstance.getCurrentUser();
 
+  // Don't wait for this as it's only to create the user if it doesn't exist
+  getOrCreateUser(currentUser.key, currentUser.email, currentUser.name).catch(
+    (error) => {
+      console.error(error);
+    }
+  );
+
   const alerts = await fetch(
     `https://api.jobcompass.dev/alerts/${currentUser.key}`
   ).then((response) => response.json());
@@ -75,14 +82,6 @@ export default async function Dashboard() {
         new Date(b.CreationDate).getTime() - new Date(a.CreationDate).getTime()
       );
     });
-
-  await getOrCreateUser(
-    currentUser.key,
-    currentUser.email,
-    currentUser.name
-  ).catch((error) => {
-    console.error(error);
-  });
 
   return (
     <div className="flex flex-col items-center justify-between relative">
@@ -131,9 +130,9 @@ export default async function Dashboard() {
                 <span className="text-lg font-semibold text-center">
                   No has aplicado a ninguna oferta
                 </span>
-                <span className="text-sm font-semibold text-center">
+                {/* <span className="text-sm font-semibold text-center">
                   Instala la extensión para vincular tu cuenta actual
-                </span>
+                </span> */}
               </div>
             )}
             <div className="flex flex-col items-center justify-center w-full mt-10 gap-2">
