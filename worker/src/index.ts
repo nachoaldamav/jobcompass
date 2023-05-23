@@ -122,25 +122,61 @@ app.post('/user', async (c) => {
 });
 
 app.post('/offers', async (c) => {
-  const body = await c.req.json();
+  try {
+    const { offers: offersList } = await c.req.json();
 
-  const offersList = body.offers;
+    console.log('offers', offersList);
 
-  const offers = await Promise.all(
-    offersList.map(async (offer: string) => {
-      const res = await fetch(`https://api.infojobs.net/api/7/offer/${offer}`, {
-        headers: {
-          Authorization: `Basic ${c.env.INFOJOBS_BASIC_AUTH}`,
-          Accept: 'application/json',
-          'Content-Type': 'application/json',
-        },
-      }).then((res) => res.json());
+    const offers = await Promise.all(
+      offersList.map(async (offer: string) => {
+        // fetch the offer data and save it to the bucket
+        const res = await fetch(
+          `https://api.infojobs.net/api/7/offer/${offer}`,
+          {
+            headers: {
+              Authorization: `Basic ${c.env.INFOJOBS_BASIC_AUTH}`,
+              Accept: 'application/json',
+              'Content-Type': 'application/json',
+            },
+          }
+        ).then((res) => res.json());
 
-      return res;
-    })
-  );
+        const jsonHash = JSON.stringify(res);
 
-  return c.json(offers);
+        const sha = await crypto.subtle
+          .digest('SHA-256', new TextEncoder().encode(jsonHash))
+          .then((hash) => {
+            return Array.from(new Uint8Array(hash))
+              .map((b) => b.toString(16).padStart(2, '0'))
+              .join('');
+          });
+
+        const exists = await c.env.JOBCOMPASS_BUCKET.get(
+          `offers/${offer}/${sha}.json`
+        );
+
+        if (!exists) {
+          await c.env.JOBCOMPASS_BUCKET.put(
+            `offers/${offer}/${sha}.json`,
+            jsonHash
+          );
+          console.log('Offer added', offer, sha);
+        } else {
+          console.log('Offer already exists');
+        }
+
+        return res;
+      })
+    );
+
+    return c.json(offers);
+  } catch (err: any) {
+    console.log(err);
+    return c.json({
+      code: err.status,
+      name: err.name,
+    });
+  }
 });
 
 app.get('/offer/:id', async (c) => {
@@ -220,6 +256,65 @@ app.get('/offer-diff/:id', async (c) => {
   };
 
   return c.json(diff);
+});
+
+app.get('/offer-updates/:id', async (c) => {
+  try {
+    const id = c.req.param('id');
+
+    const directory = await c.env.JOBCOMPASS_BUCKET.list({
+      prefix: `offers/${id}/`,
+    });
+
+    const files = directory.objects
+      .map((file) => {
+        return {
+          name: file.key,
+          uploaded: file.uploaded,
+        };
+      })
+      .sort((a, b) => {
+        return b.uploaded.getMilliseconds() - a.uploaded.getMilliseconds();
+      });
+
+    const filesData = (
+      await Promise.all(
+        files.map(async (file) => {
+          const data = (await c.env.JOBCOMPASS_BUCKET.get(file.name).then(
+            (res) => res?.json()
+          )) as Offer;
+
+          return {
+            ...data,
+            uploaded: file.uploaded,
+          };
+        })
+      )
+    ).sort((a, b) => {
+      return new Date(a.uploaded).getTime() - new Date(b.uploaded).getTime();
+    });
+
+    const data = {
+      id,
+      updates: filesData.map((file) => file.uploaded),
+      candidates: filesData.map((file) => file.applications || 0),
+      maxSalary: filesData.map((file) => file.maxPay?.amount || 0),
+      minSalary: filesData.map((file) => file.minPay?.amount || 0),
+      vacancies: filesData.map((file) => file.vacancies || 0),
+      active: filesData.map((file) => file.active || true),
+      updated: filesData.map((file) => file.updateDate || ''),
+      killerQuestions: filesData.map((file) => file.hasKillerQuestions || 0),
+      openQuestions: filesData.map((file) => file.hasOpenQuestions || 0),
+    };
+
+    return c.json(data);
+  } catch (err: any) {
+    console.log(err);
+    return c.json({
+      code: err.status,
+      name: err.name,
+    });
+  }
 });
 
 app.post('/alert', async (c) => {
