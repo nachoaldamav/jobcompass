@@ -157,6 +157,7 @@ export interface QueryParameters {
 export interface Offer {
   id: string;
   title: string;
+  description: string;
   province: Province2;
   city: string;
   link: string;
@@ -171,6 +172,7 @@ export interface Offer {
   study: Study2;
   teleworking: Teleworking2;
   published: string;
+  vacancies: number;
   updated: string;
   profile: Author2;
   requirementMin: string;
