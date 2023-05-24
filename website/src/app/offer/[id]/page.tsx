@@ -128,7 +128,7 @@ export default async function Page({ params }: OfferPageProps) {
         <h3 className="text-xl font-bold p-4">Descripción</h3>
         <CollapsibleText
           text={offer.description}
-          className="text-lg p-4"
+          className="text-lg p-4 font-light"
           maxLength={400}
         />
       </article>
