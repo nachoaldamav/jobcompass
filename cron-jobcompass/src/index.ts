@@ -44,14 +44,20 @@ export default {
       })
     );
 
-    console.log(`Hello World!`);
+    console.log('Hello from a scheduled worker!');
+
+    return;
   },
 };
 
 async function fetchOffer(offerId: string) {
-  const res = await fetch(`https://api.jobcompass.io/offer/${offerId}`).then(
-    (res) => res.json()
-  );
+  const res = await fetch(`https://api.jobcompass.dev/offer/${offerId}`)
+    .then((res) => res.json())
+    .catch((err) => {
+      console.log(`Failed to fetch offer ${offerId}`);
+      console.log(err);
+      throw err;
+    });
 
   return res;
 }

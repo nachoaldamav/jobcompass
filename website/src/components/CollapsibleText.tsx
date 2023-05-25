@@ -1,5 +1,5 @@
 'use client';
-import { useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import { twMerge } from 'tailwind-merge';
 
 type CollapsibleTextProps = {
@@ -13,18 +13,32 @@ export function CollapsibleText({
   className,
   maxLength = 100,
 }: CollapsibleTextProps) {
+  const collapsibleRef = useRef<HTMLDivElement>(null);
   const [showMore, setShowMore] = useState(false);
 
   if (text.length <= maxLength) {
-    return <p className={className}>{text}</p>;
+    return <p className={className}>{fmtText(text)}</p>;
   }
 
+  // eslint-disable-next-line react-hooks/rules-of-hooks
+  useEffect(() => {
+    if (showMore && collapsibleRef.current) {
+      collapsibleRef.current.scrollIntoView({
+        behavior: 'smooth',
+        block: 'start',
+      });
+    }
+  }, [showMore]);
+
   return (
-    <p className={twMerge(className, 'flex flex-col relative')}>
-      {showMore ? text : text.slice(0, maxLength) + '...'}
+    <p
+      className={twMerge(className, 'flex flex-col relative')}
+      ref={collapsibleRef}
+    >
+      {showMore ? fmtText(text) : fmtText(text.slice(0, maxLength) + '...')}
       <button
         className={twMerge(
-          'text-white absolute bottom-0 right-0 left-0 h-24 text-lg font-bold pt-8 text-center bg-gradient-to-t from-gray-800 via-gray-800/75 to-transparent rounded-lg inline-flex gap-2 items-center justify-center',
+          'text-white absolute w-full bottom-0 right-0 left-0 h-24 text-lg font-bold pt-8 text-center bg-gradient-to-t from-gray-800 via-gray-800/75 to-transparent rounded-xl inline-flex gap-2 items-center justify-center',
           !showMore
             ? 'bg-opacity-100'
             : 'from-transparent to-transparent via-transparent opacity-0'
@@ -66,4 +80,17 @@ export function CollapsibleText({
       </button>
     </p>
   );
+}
+
+function fmtText(text: string) {
+  // Normalize newlines, then split text by new line
+  const textArr = text.replace(/\r\n|\r/g, '\n').split('\n');
+
+  // Map over the text array and return each line as a JSX element
+  return textArr.map((line, index) => (
+    <span key={index}>
+      {line}
+      <br />
+    </span>
+  ));
 }

@@ -20,8 +20,8 @@ importers:
   cron-jobcompass:
     dependencies:
       '@planetscale/database':
-        specifier: ^1.7.0
-        version: 1.7.0
+        specifier: 1.6.0
+        version: 1.6.0
     devDependencies:
       '@cloudflare/workers-types':
         specifier: ^4.20230518.0

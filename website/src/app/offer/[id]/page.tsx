@@ -1,7 +1,11 @@
+import type { Session } from 'next-auth';
+import type { SingleOffer } from '../../../../types/infojobs/getOffer';
+import { getServerSession } from 'next-auth/next';
 import Image from 'next/image';
-import { Offer } from '../../../../types/infojobs/getOffers';
+import { authOptions } from '@/pages/api/auth/[...nextauth]';
 import { CollapsibleText } from '@/components/CollapsibleText';
 import { Card } from '@/components/SimpleCard';
+import { Salary } from '@/components/SalaryInfo';
 
 type OfferPageProps = {
   params: {
@@ -10,7 +14,8 @@ type OfferPageProps = {
 };
 
 export default async function Page({ params }: OfferPageProps) {
-  const offer: Offer = await fetch(
+  const session = (await getServerSession(authOptions)) as Session;
+  const offer: SingleOffer = await fetch(
     `https://api.jobcompass.dev/offer/${params.id}`
   ).then((res) => res.json());
 
@@ -26,13 +31,13 @@ export default async function Page({ params }: OfferPageProps) {
           alt={offer.profile.name}
           width={60}
           height={60}
+          className="rounded-xl"
         />
         <div className="flex flex-col justify-start items-start">
           <h1 className="text-2xl font-bold">{offer.title}</h1>
           <h2 className="text-xl">{offer.profile.name}</h2>
         </div>
       </header>
-      {/* show here, in cards, some info as the vacancies, the salary range, location and the contract type */}
       <section className="flex flex-row justify-start items-center w-full mt-4 gap-2">
         <Card>
           <header className="flex flex-row justify-start items-center gap-2">
@@ -72,7 +77,16 @@ export default async function Page({ params }: OfferPageProps) {
             </svg>
             <h3 className="text-xl font-bold">Salario</h3>
           </header>
-          <p className="text-lg">{offer.salaryDescription}</p>
+          {offer.salaryDescription.includes('€') ? (
+            <Salary
+              maxPay={offer.maxPay}
+              minPay={offer.minPay}
+              salaryDescription={offer.salaryDescription}
+              className="text-lg"
+            />
+          ) : (
+            <p className="text-lg">{offer.salaryDescription}</p>
+          )}
         </Card>
         <Card>
           <header className="flex flex-row justify-start items-center gap-2">
@@ -128,10 +142,20 @@ export default async function Page({ params }: OfferPageProps) {
         <h3 className="text-xl font-bold p-4">Descripción</h3>
         <CollapsibleText
           text={offer.description}
-          className="text-lg p-4 font-light"
+          className="text-lg p-4 font-light w-full"
           maxLength={400}
         />
       </article>
+      {offer.minRequirements && (
+        <article className="flex flex-col justify-start items-start w-full rounded-xl border border-gray-500/20 bg-gray-800/20 z-[999] mt-4">
+          <h3 className="text-xl font-bold p-4">Requisitos mínimos</h3>
+          <CollapsibleText
+            text={offer.minRequirements}
+            className="text-lg p-4 font-light w-full"
+            maxLength={400}
+          />
+        </article>
+      )}
     </main>
   );
 }
