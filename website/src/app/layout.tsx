@@ -1,11 +1,10 @@
 import './globals.css';
-import { Inter, Montserrat } from 'next/font/google';
+import { Montserrat } from 'next/font/google';
 import Head from 'next/head';
 import { AuthProvider } from '@/components/authContext';
 import { GradientBackground } from '@/components/GradientBrackground';
 import { BackgroundGrid } from '@/components/BackgroundGrid';
 
-/* const inter = Inter({ subsets: ['latin'] }); */
 const montserrat = Montserrat({ subsets: ['latin'] });
 
 export const metadata = {

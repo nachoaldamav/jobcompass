@@ -1,11 +1,12 @@
 import type { Session } from 'next-auth';
-import type { SingleOffer } from '../../../../types/infojobs/getOffer';
+import type { SingleOffer } from 'types/infojobs/getOffer';
 import { getServerSession } from 'next-auth/next';
 import Image from 'next/image';
 import { authOptions } from '@/pages/api/auth/[...nextauth]';
 import { CollapsibleText } from '@/components/CollapsibleText';
-import { Card } from '@/components/SimpleCard';
-import { Salary } from '@/components/SalaryInfo';
+import { Sidebar } from './sidebar';
+import Head from 'next/head';
+import { Metadata } from 'next';
 
 type OfferPageProps = {
   params: {
@@ -13,173 +14,91 @@ type OfferPageProps = {
   };
 };
 
+async function getOffer(id: string): Promise<SingleOffer> {
+  return fetch(`https://api.jobcompass.dev/offer/${id}`).then((res) =>
+    res.json()
+  );
+}
+
+export async function generateMetadata({
+  params,
+}: OfferPageProps): Promise<Metadata> {
+  const offer = await getOffer(params.id);
+
+  return {
+    title: `${offer.title} | JobCompass`,
+    description: offer.description,
+  };
+}
+
 export default async function Page({ params }: OfferPageProps) {
   const session = (await getServerSession(authOptions)) as Session;
-  const offer: SingleOffer = await fetch(
-    `https://api.jobcompass.dev/offer/${params.id}`
-  ).then((res) => res.json());
+  const offer = await getOffer(params.id);
 
   if (!offer) {
     return <div>Offer not found</div>;
   }
 
   return (
-    <main className="min-h-screen w-full lg:w-3/4 flex flex-col justify-start mx-auto items-center p-10 z-50">
-      <header className="flex flex-row justify-start gap-4 items-center w-full rounded-xl p-4 border border-gray-500/20 bg-gray-800/40">
-        <Image
-          src={offer.profile.logoUrl || '/infojobs.png'}
-          alt={offer.profile.name}
-          width={60}
-          height={60}
-          className="rounded-xl"
+    <>
+      <Head>
+        <title>{offer.title} | JobCompass</title>
+        <meta name="description" content={offer.description} />
+        <meta property="og:title" content={offer.title} />
+        <meta property="og:description" content={offer.description} />
+        <meta property="og:image" content={offer.profile.logoUrl} />
+        <meta
+          property="og:url"
+          content={`https://jobcompass.dev/offer/${offer.id}`}
         />
-        <div className="flex flex-col justify-start items-start">
-          <h1 className="text-2xl font-bold">{offer.title}</h1>
-          <h2 className="text-xl">{offer.profile.name}</h2>
-        </div>
-      </header>
-      <section className="flex flex-row justify-between items-center w-full mt-4 gap-2">
-        <Card
-          header={<h3 className="text-3xl font-bold">{offer.vacancies}</h3>}
-          footer={
-            <>
-              <svg
-                xmlns="http://www.w3.org/2000/svg"
-                viewBox="0 0 24 24"
-                fill="currentColor"
-                className="w-5 h-5 text-green-300"
-              >
-                <path
-                  fillRule="evenodd"
-                  d="M7.5 6a4.5 4.5 0 119 0 4.5 4.5 0 01-9 0zM3.751 20.105a8.25 8.25 0 0116.498 0 .75.75 0 01-.437.695A18.683 18.683 0 0112 22.5c-2.786 0-5.433-.608-7.812-1.7a.75.75 0 01-.437-.695z"
-                  clipRule="evenodd"
-                />
-              </svg>
-              <p>Vacantes</p>
-            </>
-          }
+        <meta property="og:type" content="website" />
+        <meta property="og:site_name" content="JobCompass" />
+        <meta name="twitter:card" content="summary_large_image" />
+        <meta name="twitter:site" content="@jobcompass" />
+        <meta name="twitter:creator" content="@jobcompass" />
+        <meta name="twitter:title" content={offer.title} />
+        <meta name="twitter:description" content={offer.description} />
+        <meta name="twitter:image" content={offer.profile.logoUrl} />
+        <meta
+          name="twitter:url"
+          content={`https://jobcompass.dev/offer/${offer.id}`}
         />
-        <Card
-          header={<h3 className="text-3xl font-bold">{offer.applications}</h3>}
-          footer={
-            <>
-              <svg
-                xmlns="http://www.w3.org/2000/svg"
-                viewBox="0 0 24 24"
-                fill="currentColor"
-                className="w-5 h-5 text-orange-500"
-              >
-                <path
-                  fillRule="evenodd"
-                  d="M8.25 6.75a3.75 3.75 0 117.5 0 3.75 3.75 0 01-7.5 0zM15.75 9.75a3 3 0 116 0 3 3 0 01-6 0zM2.25 9.75a3 3 0 116 0 3 3 0 01-6 0zM6.31 15.117A6.745 6.745 0 0112 12a6.745 6.745 0 016.709 7.498.75.75 0 01-.372.568A12.696 12.696 0 0112 21.75c-2.305 0-4.47-.612-6.337-1.684a.75.75 0 01-.372-.568 6.787 6.787 0 011.019-4.38z"
-                  clipRule="evenodd"
-                />
-                <path d="M5.082 14.254a8.287 8.287 0 00-1.308 5.135 9.687 9.687 0 01-1.764-.44l-.115-.04a.563.563 0 01-.373-.487l-.01-.121a3.75 3.75 0 013.57-4.047zM20.226 19.389a8.287 8.287 0 00-1.308-5.135 3.75 3.75 0 013.57 4.047l-.01.121a.563.563 0 01-.373.486l-.115.04c-.567.2-1.156.349-1.764.441z" />
-              </svg>
-              <p>Aplicaciones</p>
-            </>
-          }
-        />
-        <Card
-          header={
-            <h3 className="text-xl font-bold">
-              {offer.salaryDescription.includes('€') ? (
-                <Salary
-                  maxPay={offer.maxPay}
-                  minPay={offer.minPay}
-                  salaryDescription={offer.salaryDescription}
-                  className=""
-                />
-              ) : (
-                <p>{offer.salaryDescription}</p>
-              )}
-            </h3>
-          }
-          footer={
-            <>
-              <svg
-                xmlns="http://www.w3.org/2000/svg"
-                viewBox="0 0 24 24"
-                fill="currentColor"
-                className="w-5 h-5 text-red-400"
-              >
-                <path
-                  fillRule="evenodd"
-                  d="M12 2.25c-5.385 0-9.75 4.365-9.75 9.75s4.365 9.75 9.75 9.75 9.75-4.365 9.75-9.75S17.385 2.25 12 2.25zm-1.902 7.098a3.75 3.75 0 013.903-.884.75.75 0 10.498-1.415A5.25 5.25 0 008.005 9.75H7.5a.75.75 0 000 1.5h.054a5.281 5.281 0 000 1.5H7.5a.75.75 0 000 1.5h.505a5.25 5.25 0 006.494 2.701.75.75 0 00-.498-1.415 3.75 3.75 0 01-4.252-1.286h3.001a.75.75 0 000-1.5H9.075a3.77 3.77 0 010-1.5h3.675a.75.75 0 000-1.5h-3c.105-.14.221-.274.348-.402z"
-                  clipRule="evenodd"
-                />
-              </svg>
+      </Head>
 
-              <h3>Salario</h3>
-            </>
-          }
-        />
-        <Card
-          header={
-            <h3 className="text-2xl font-bold">
-              {offer.multiProvince ? 'Varias provincias' : offer.province.value}
-            </h3>
-          }
-          footer={
-            <>
-              <svg
-                xmlns="http://www.w3.org/2000/svg"
-                viewBox="0 0 24 24"
-                fill="currentColor"
-                className="w-5 h-5 text-blue-300"
-              >
-                <path
-                  fillRule="evenodd"
-                  d="M11.54 22.351l.07.04.028.016a.76.76 0 00.723 0l.028-.015.071-.041a16.975 16.975 0 001.144-.742 19.58 19.58 0 002.683-2.282c1.944-1.99 3.963-4.98 3.963-8.827a8.25 8.25 0 00-16.5 0c0 3.846 2.02 6.837 3.963 8.827a19.58 19.58 0 002.682 2.282 16.975 16.975 0 001.145.742zM12 13.5a3 3 0 100-6 3 3 0 000 6z"
-                  clipRule="evenodd"
-                />
-              </svg>
-              <h3>Localización</h3>
-            </>
-          }
-        />
-        <Card
-          header={
-            <h3 className="text-2xl font-bold">{offer.contractType.value}</h3>
-          }
-          footer={
-            <>
-              <svg
-                xmlns="http://www.w3.org/2000/svg"
-                viewBox="0 0 24 24"
-                fill="currentColor"
-                className="w-5 h-5 text-yellow-300"
-              >
-                <path
-                  fillRule="evenodd"
-                  d="M18.97 3.659a2.25 2.25 0 00-3.182 0l-10.94 10.94a3.75 3.75 0 105.304 5.303l7.693-7.693a.75.75 0 011.06 1.06l-7.693 7.693a5.25 5.25 0 11-7.424-7.424l10.939-10.94a3.75 3.75 0 115.303 5.304L9.097 18.835l-.008.008-.007.007-.002.002-.003.002A2.25 2.25 0 015.91 15.66l7.81-7.81a.75.75 0 011.061 1.06l-7.81 7.81a.75.75 0 001.054 1.068L18.97 6.84a2.25 2.25 0 000-3.182z"
-                  clipRule="evenodd"
-                />
-              </svg>
-
-              <p>Tipo de contrato</p>
-            </>
-          }
-        />
-      </section>
-      <article className="flex flex-col justify-start items-start w-full rounded-xl border border-gray-500/20 bg-gray-800/20 z-[999] mt-4">
-        <h3 className="text-xl font-bold p-4">Descripción</h3>
-        <CollapsibleText
-          text={offer.description}
-          className="text-lg p-4 font-light w-full"
-          maxLength={400}
-        />
-      </article>
-      {offer.minRequirements && (
+      <div className="flex flex-col justify-start items-start gap-4 w-full col-span-6">
+        <header className="flex flex-row justify-start gap-4 items-center w-full rounded-xl p-4 border border-gray-500/20 bg-gray-800/40">
+          <Image
+            src={offer.profile.logoUrl || '/infojobs.png'}
+            alt={offer.profile.name}
+            width={60}
+            height={60}
+            className="rounded-xl"
+          />
+          <div className="flex flex-col justify-start items-start">
+            <h1 className="text-2xl font-bold">{offer.title}</h1>
+            <h2 className="text-xl">{offer.profile.name}</h2>
+          </div>
+        </header>
         <article className="flex flex-col justify-start items-start w-full rounded-xl border border-gray-500/20 bg-gray-800/20 z-[999] mt-4">
-          <h3 className="text-xl font-bold p-4">Requisitos mínimos</h3>
+          <h3 className="text-xl font-bold p-4">Descripción</h3>
           <CollapsibleText
-            text={offer.minRequirements}
+            text={offer.description}
             className="text-lg p-4 font-light w-full"
             maxLength={400}
           />
         </article>
-      )}
-    </main>
+        {offer.minRequirements && (
+          <article className="flex flex-col justify-start items-start w-full rounded-xl border border-gray-500/20 bg-gray-800/20 z-[999] mt-4">
+            <h3 className="text-xl font-bold p-4">Requisitos mínimos</h3>
+            <CollapsibleText
+              text={offer.minRequirements}
+              className="text-lg p-4 font-light w-full"
+              maxLength={400}
+            />
+          </article>
+        )}
+      </div>
+      <Sidebar offer={offer} />
+    </>
   );
 }
