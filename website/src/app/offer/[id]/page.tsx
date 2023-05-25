@@ -57,20 +57,7 @@ export default async function Page({ params }: OfferPageProps) {
             <h2 className="text-xl">{offer.profile.name}</h2>
           </div>
         </header>
-        <Suspense
-          fallback={
-            <section className="flex flex-col justify-start items-start w-full rounded-xl border border-gray-500/20 bg-gray-800/20 z-[999] mt-4">
-              <h3 className="text-xl font-bold p-4">Actualizaciones</h3>
-              <div className="flex flex-col justify-start items-start w-full">
-                <span className="text-lg p-4 font-light w-full">
-                  Cargando...
-                </span>
-              </div>
-            </section>
-          }
-        >
-          <OfferStatus id={params.id} />
-        </Suspense>
+        <OfferStatus id={params.id} />
         <article className="flex flex-col justify-start items-start w-full rounded-xl border border-gray-500/20 bg-gray-800/20 z-[999] mt-4">
           <h3 className="text-xl font-bold p-4">Descripción</h3>
           <CollapsibleText
