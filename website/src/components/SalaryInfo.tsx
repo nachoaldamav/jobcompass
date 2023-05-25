@@ -39,9 +39,9 @@ export function Salary(SalaryProps: SalaryProps) {
 
   return (
     <div className={SalaryProps.className}>
-      <p className="text-lg">
+      <p>
         {fmtNumber(minPayValue as string)} - {fmtNumber(maxPayValue as string)}
-        <span className="text-gray-500"> / {periods[period]}</span>
+        <span className="text-gray-500 text-lg"> / {periods[period]}</span>
       </p>
     </div>
   );

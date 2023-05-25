@@ -1,11 +1,12 @@
 import './globals.css';
-import { Inter } from 'next/font/google';
+import { Inter, Montserrat } from 'next/font/google';
 import Head from 'next/head';
 import { AuthProvider } from '@/components/authContext';
 import { GradientBackground } from '@/components/GradientBrackground';
 import { BackgroundGrid } from '@/components/BackgroundGrid';
 
-const inter = Inter({ subsets: ['latin'] });
+/* const inter = Inter({ subsets: ['latin'] }); */
+const montserrat = Montserrat({ subsets: ['latin'] });
 
 export const metadata = {
   title: 'Infojobs hackathon',
@@ -27,7 +28,7 @@ export default function RootLayout({
           content="Keep track of the companies you are applying to and get notifications about how they are going."
         />
       </Head>
-      <body className={inter.className}>
+      <body className={montserrat.className}>
         <GradientBackground />
         <BackgroundGrid />
         <AuthProvider>{children}</AuthProvider>

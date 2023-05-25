@@ -39,104 +39,107 @@ export default async function Page({ params }: OfferPageProps) {
         </div>
       </header>
       <section className="flex flex-row justify-start items-center w-full mt-4 gap-2">
-        <Card>
-          <header className="flex flex-row justify-start items-center gap-2">
-            <svg
-              xmlns="http://www.w3.org/2000/svg"
-              fill="none"
-              viewBox="0 0 24 24"
-              strokeWidth={1.5}
-              stroke="currentColor"
-              className="w-6 h-6"
-            >
-              <path
-                strokeLinecap="round"
-                strokeLinejoin="round"
-                d="M15.75 6a3.75 3.75 0 11-7.5 0 3.75 3.75 0 017.5 0zM4.501 20.118a7.5 7.5 0 0114.998 0A17.933 17.933 0 0112 21.75c-2.676 0-5.216-.584-7.499-1.632z"
-              />
-            </svg>
-            <h3 className="text-xl font-bold">Vacantes</h3>
-          </header>
-          <p className="text-lg">{offer.vacancies}</p>
-        </Card>
-        <Card>
-          <header className="flex flex-row justify-start items-center gap-2">
-            <svg
-              xmlns="http://www.w3.org/2000/svg"
-              fill="none"
-              viewBox="0 0 24 24"
-              strokeWidth={1.5}
-              stroke="currentColor"
-              className="w-6 h-6"
-            >
-              <path
-                strokeLinecap="round"
-                strokeLinejoin="round"
-                d="M2.25 18.75a60.07 60.07 0 0115.797 2.101c.727.198 1.453-.342 1.453-1.096V18.75M3.75 4.5v.75A.75.75 0 013 6h-.75m0 0v-.375c0-.621.504-1.125 1.125-1.125H20.25M2.25 6v9m18-10.5v.75c0 .414.336.75.75.75h.75m-1.5-1.5h.375c.621 0 1.125.504 1.125 1.125v9.75c0 .621-.504 1.125-1.125 1.125h-.375m1.5-1.5H21a.75.75 0 00-.75.75v.75m0 0H3.75m0 0h-.375a1.125 1.125 0 01-1.125-1.125V15m1.5 1.5v-.75A.75.75 0 003 15h-.75M15 10.5a3 3 0 11-6 0 3 3 0 016 0zm3 0h.008v.008H18V10.5zm-12 0h.008v.008H6V10.5z"
-              />
-            </svg>
-            <h3 className="text-xl font-bold">Salario</h3>
-          </header>
-          {offer.salaryDescription.includes('€') ? (
-            <Salary
-              maxPay={offer.maxPay}
-              minPay={offer.minPay}
-              salaryDescription={offer.salaryDescription}
-              className="text-lg"
-            />
-          ) : (
-            <p className="text-lg">{offer.salaryDescription}</p>
-          )}
-        </Card>
-        <Card>
-          <header className="flex flex-row justify-start items-center gap-2">
-            <svg
-              xmlns="http://www.w3.org/2000/svg"
-              fill="none"
-              viewBox="0 0 24 24"
-              strokeWidth={1.5}
-              stroke="currentColor"
-              className="w-6 h-6"
-            >
-              <path
-                strokeLinecap="round"
-                strokeLinejoin="round"
-                d="M15 10.5a3 3 0 11-6 0 3 3 0 016 0z"
-              />
-              <path
-                strokeLinecap="round"
-                strokeLinejoin="round"
-                d="M19.5 10.5c0 7.142-7.5 11.25-7.5 11.25S4.5 17.642 4.5 10.5a7.5 7.5 0 1115 0z"
-              />
-            </svg>
-            <h3 className="text-xl font-bold">
-              {offer.multiProvince ? 'Provincias' : 'Provincia'}
+        <Card
+          header={<h3 className="text-3xl font-bold">{offer.vacancies}</h3>}
+          footer={
+            <>
+              <svg
+                xmlns="http://www.w3.org/2000/svg"
+                viewBox="0 0 24 24"
+                fill="currentColor"
+                className="w-5 h-5 text-green-300"
+              >
+                <path
+                  fillRule="evenodd"
+                  d="M7.5 6a4.5 4.5 0 119 0 4.5 4.5 0 01-9 0zM3.751 20.105a8.25 8.25 0 0116.498 0 .75.75 0 01-.437.695A18.683 18.683 0 0112 22.5c-2.786 0-5.433-.608-7.812-1.7a.75.75 0 01-.437-.695z"
+                  clipRule="evenodd"
+                />
+              </svg>
+              <p>Vacantes</p>
+            </>
+          }
+        />
+        <Card
+          header={
+            <h3 className="text-3xl font-bold">
+              {offer.salaryDescription.includes('€') ? (
+                <Salary
+                  maxPay={offer.maxPay}
+                  minPay={offer.minPay}
+                  salaryDescription={offer.salaryDescription}
+                  className="text-3xl"
+                />
+              ) : (
+                <p>{offer.salaryDescription}</p>
+              )}
             </h3>
-          </header>
-          <p className="text-lg">
-            {offer.multiProvince ? 'Varias' : offer.province.value}
-          </p>
-        </Card>
-        <Card>
-          <header className="flex flex-row justify-start items-center gap-2">
-            <svg
-              xmlns="http://www.w3.org/2000/svg"
-              fill="none"
-              viewBox="0 0 24 24"
-              strokeWidth={1.5}
-              stroke="currentColor"
-              className="w-6 h-6"
-            >
-              <path
-                strokeLinecap="round"
-                strokeLinejoin="round"
-                d="M18.375 12.739l-7.693 7.693a4.5 4.5 0 01-6.364-6.364l10.94-10.94A3 3 0 1119.5 7.372L8.552 18.32m.009-.01l-.01.01m5.699-9.941l-7.81 7.81a1.5 1.5 0 002.112 2.13"
-              />
-            </svg>
-            <h3 className="text-xl font-bold">Tipo de contrato</h3>
-          </header>
-          <p className="text-lg">{offer.contractType.value}</p>
-        </Card>
+          }
+          footer={
+            <>
+              <svg
+                xmlns="http://www.w3.org/2000/svg"
+                viewBox="0 0 24 24"
+                fill="currentColor"
+                className="w-5 h-5 text-red-400"
+              >
+                <path
+                  fillRule="evenodd"
+                  d="M12 2.25c-5.385 0-9.75 4.365-9.75 9.75s4.365 9.75 9.75 9.75 9.75-4.365 9.75-9.75S17.385 2.25 12 2.25zm-1.902 7.098a3.75 3.75 0 013.903-.884.75.75 0 10.498-1.415A5.25 5.25 0 008.005 9.75H7.5a.75.75 0 000 1.5h.054a5.281 5.281 0 000 1.5H7.5a.75.75 0 000 1.5h.505a5.25 5.25 0 006.494 2.701.75.75 0 00-.498-1.415 3.75 3.75 0 01-4.252-1.286h3.001a.75.75 0 000-1.5H9.075a3.77 3.77 0 010-1.5h3.675a.75.75 0 000-1.5h-3c.105-.14.221-.274.348-.402z"
+                  clipRule="evenodd"
+                />
+              </svg>
+
+              <h3>Salario</h3>
+            </>
+          }
+        />
+        <Card
+          header={
+            <h3 className="text-2xl font-bold">
+              {offer.multiProvince ? 'Varias provincias' : offer.province.value}
+            </h3>
+          }
+          footer={
+            <>
+              <svg
+                xmlns="http://www.w3.org/2000/svg"
+                viewBox="0 0 24 24"
+                fill="currentColor"
+                className="w-5 h-5 text-blue-300"
+              >
+                <path
+                  fillRule="evenodd"
+                  d="M11.54 22.351l.07.04.028.016a.76.76 0 00.723 0l.028-.015.071-.041a16.975 16.975 0 001.144-.742 19.58 19.58 0 002.683-2.282c1.944-1.99 3.963-4.98 3.963-8.827a8.25 8.25 0 00-16.5 0c0 3.846 2.02 6.837 3.963 8.827a19.58 19.58 0 002.682 2.282 16.975 16.975 0 001.145.742zM12 13.5a3 3 0 100-6 3 3 0 000 6z"
+                  clipRule="evenodd"
+                />
+              </svg>
+              <h3>Localización</h3>
+            </>
+          }
+        />
+        <Card
+          header={
+            <h3 className="text-2xl font-bold">{offer.contractType.value}</h3>
+          }
+          footer={
+            <>
+              <svg
+                xmlns="http://www.w3.org/2000/svg"
+                viewBox="0 0 24 24"
+                fill="currentColor"
+                className="w-5 h-5 text-yellow-300"
+              >
+                <path
+                  fillRule="evenodd"
+                  d="M18.97 3.659a2.25 2.25 0 00-3.182 0l-10.94 10.94a3.75 3.75 0 105.304 5.303l7.693-7.693a.75.75 0 011.06 1.06l-7.693 7.693a5.25 5.25 0 11-7.424-7.424l10.939-10.94a3.75 3.75 0 115.303 5.304L9.097 18.835l-.008.008-.007.007-.002.002-.003.002A2.25 2.25 0 015.91 15.66l7.81-7.81a.75.75 0 011.061 1.06l-7.81 7.81a.75.75 0 001.054 1.068L18.97 6.84a2.25 2.25 0 000-3.182z"
+                  clipRule="evenodd"
+                />
+              </svg>
+
+              <p>Tipo de contrato</p>
+            </>
+          }
+        />
       </section>
       <article className="flex flex-col justify-start items-start w-full rounded-xl border border-gray-500/20 bg-gray-800/20 z-[999] mt-4">
         <h3 className="text-xl font-bold p-4">Descripción</h3>
