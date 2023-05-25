@@ -38,7 +38,7 @@ export default async function Page({ params }: OfferPageProps) {
           <h2 className="text-xl">{offer.profile.name}</h2>
         </div>
       </header>
-      <section className="flex flex-row justify-start items-center w-full mt-4 gap-2">
+      <section className="flex flex-row justify-between items-center w-full mt-4 gap-2">
         <Card
           header={<h3 className="text-3xl font-bold">{offer.vacancies}</h3>}
           footer={
