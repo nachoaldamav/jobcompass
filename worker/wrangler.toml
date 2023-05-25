@@ -2,10 +2,12 @@ name = "worker"
 main = "src/index.ts"
 compatibility_date = "2023-05-19"
 
-[placement]
-mode = "smart"
-
 [[r2_buckets]]
 binding = 'JOBCOMPASS_BUCKET'
 bucket_name = 'jobcompass'
 preview_bucket_name = 'jobcompass-staging'
+
+[[d1_databases]]
+binding = "DB"
+database_name = "jobcompass"
+database_id = "7fda63bd-7d29-4022-9b4c-47beffe550b8"

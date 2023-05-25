@@ -112,22 +112,32 @@ export function Offer({ offerId }: { offerId: string }) {
                     userId: apiKey,
                   });
 
-                  const res = await fetch(`https://api.jobcompass.dev/alert`, {
-                    method: 'POST',
-                    headers: {
-                      'Content-Type': 'application/json',
-                    },
-                    body: JSON.stringify({
-                      offerId: data.id,
-                      userId: apiKey,
-                    }),
-                  });
-                  const json = await res.json();
-                  if (json.error) {
-                    toast.error(json.error);
-                  } else {
-                    toast.success('Alerta creada correctamente');
+                  const res = await fetch(
+                    `https://api.jobcompass.dev/v2/alert`,
+                    {
+                      method: 'POST',
+                      headers: {
+                        'Content-Type': 'application/json',
+                      },
+                      body: JSON.stringify({
+                        offerId: data.id,
+                        userId: apiKey,
+                      }),
+                    }
+                  )
+                    .then((res) => res.json())
+                    .catch((err) => {
+                      console.log(err);
+                      toast.error('Error al crear la alerta');
+                    });
+
+                  if (res.error) {
+                    toast.error(res.error);
+                    setSavingAlert(false);
+                    return;
                   }
+
+                  toast.success('Alerta creada correctamente');
                 } catch (error: any) {
                   setError(true);
                   setErrorMessage(error.message);

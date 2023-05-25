@@ -12,6 +12,7 @@ type Bindings = {
   DATABASE_PASSWORD: string;
   INFOJOBS_BASIC_AUTH: string;
   JOBCOMPASS_BUCKET: R2Bucket;
+  DB: D1Database;
 };
 
 const app = new Hono<{ Bindings: Bindings }>();
@@ -25,100 +26,6 @@ app.use(
 
 app.get('/', async (c) => {
   return c.json({ message: 'Hello World!' });
-});
-
-app.get('/user', async (c) => {
-  const config = createConfig(c.env);
-
-  // get access token from request header
-  const token = c.req.headers.get('Authorization');
-
-  // if no token, return error
-  if (!token) {
-    return c.json({ error: 'No Access Token Provided' });
-  }
-
-  try {
-    const conn = connect(config);
-    // get the user data, the Access Token is the primary key (UserId)
-    const data = await conn.execute(
-      `SELECT * FROM Users WHERE UserId = "${token.split(' ')[1]}";`
-    );
-    if (!data) {
-      return c.json({ error: 'No data' });
-    }
-
-    return c.json(data.rows);
-  } catch (err: any) {
-    console.log(err);
-    return c.json({
-      code: err.status,
-      name: err.name,
-    });
-  }
-});
-
-app.post('/user', async (c) => {
-  const config = createConfig(c.env);
-
-  // get access token from request header
-  const token = c.req.headers.get('Authorization');
-  const body = await c.req.json();
-
-  // if no token, return error
-  if (!token) {
-    return c.json({ error: 'No Access Token Provided' });
-  }
-
-  const userData: UserProfile = {
-    id: body.id,
-    email: body.email,
-    emailHash: body.emailHash,
-    userKey: body.key,
-    hasPhoto: body.hasPhoto,
-    photo: body.photo,
-    name: body.name,
-    surname1: body.surname1,
-    surname2: body.surname2,
-    fullName: body.fullName,
-    city: body.city,
-    province: body.province,
-    publicProfileLink: body.publicProfileLink,
-    status: body.status,
-    validatedMail: body.validatedMail,
-    accountCreation: body.accountCreation,
-    lastCVUpdate: body.lastCVUpdate,
-    lastInscripcion: body.lastInscripcion,
-    extendedBannerAttributes: body.extendedBannerAttributes,
-    subSegment: body.subSegment,
-    doesNotWantNotifications: body.doesNotWantNotifications,
-    photoAccepted: body.photoAccepted,
-    access_token: body.access_token,
-    expires_in: body.expires_in,
-    refresh_token: body.refresh_token,
-    scope: body.scope,
-    token_type: body.token_type,
-  };
-
-  try {
-    const conn = connect(config);
-    // insert user data into database
-    const data = await conn.execute(
-      `INSERT INTO users (id, email, emailHash, userKey, hasPhoto, photo, name, surname1, surname2, fullName, city, province, publicProfileLink, status, validatedMail, accountCreation, lastCVUpdate, lastInscripcion, extendedBannerAttributes, subSegment, doesNotWantNotifications, photoAccepted, access_token, expires_in, refresh_token, scope, token_type) VALUES (${userData.id}, ${userData.email}, ${userData.emailHash}, ${userData.userKey}, ${userData.hasPhoto}, ${userData.photo}, ${userData.name}, ${userData.surname1}, ${userData.surname2}, ${userData.fullName}, ${userData.city}, ${userData.province}, ${userData.publicProfileLink}, ${userData.status}, ${userData.validatedMail}, ${userData.accountCreation}, ${userData.lastCVUpdate}, ${userData.lastInscripcion}, ${userData.extendedBannerAttributes}, ${userData.subSegment}, ${userData.doesNotWantNotifications}, ${userData.photoAccepted}, ${userData.access_token}, ${userData.expires_in}, ${userData.refresh_token}, ${userData.scope}, ${userData.token_type});`
-    );
-
-    if (!data) {
-      return c.json({ error: 'No data' });
-    }
-
-    return c.json(data.rows);
-  } catch (err: any) {
-    console.log(err);
-    return c.json({
-      code: err.status,
-      name: err.name,
-    });
-  }
 });
 
 app.post('/offers', async (c) => {
@@ -354,6 +261,40 @@ app.post('/alert', async (c) => {
   }
 });
 
+app.post('/v2/alert', async (c) => {
+  const body = await c.req.json();
+
+  const { userId, offerId } = body;
+
+  try {
+    const { results } = await c.env.DB.prepare(
+      `SELECT * FROM JobAlerts WHERE UserId = "${userId}" AND OfferId = "${offerId}";`
+    ).all();
+
+    if (results && results.length > 0) {
+      return c.json({ error: 'Ya tienes una alerta para esta oferta' });
+    }
+
+    // insert user data into database
+    const { results: data } = await c.env.DB.prepare(
+      `INSERT INTO JobAlerts (UserId, OfferId, AlertId, CreationDate) VALUES ("${userId}", "${offerId}", "${uuid()}", "${new Date().toISOString()}");`
+    ).all();
+
+    if (!data) {
+      return c.json({ error: 'No data' });
+    }
+
+    return c.json(data);
+  } catch (err: any) {
+    console.log(err);
+    return c.json({
+      code: err.status,
+      name: err.name,
+      error: err,
+    });
+  }
+});
+
 app.get('/alerts/:userId', async (c) => {
   const config = createConfig(c.env);
   const userId = c.req.param('userId');
@@ -370,6 +311,91 @@ app.get('/alerts/:userId', async (c) => {
     }
 
     return c.json(data.rows);
+  } catch (err: any) {
+    console.log(err);
+    return c.json({
+      code: err.status,
+      name: err.name,
+      error: err,
+    });
+  }
+});
+
+app.get('/v2/alerts/:userId', async (c) => {
+  const userId = c.req.param('userId');
+
+  try {
+    const { results } = await c.env.DB.prepare(
+      `SELECT * FROM JobAlerts WHERE UserId = "${userId}";`
+    ).all();
+
+    if (!results) {
+      return c.json([]);
+    }
+
+    return c.json(results);
+  } catch (err: any) {
+    console.log(err);
+    return c.json({
+      code: err.status,
+      name: err.name,
+      error: err,
+    });
+  }
+});
+
+app.post('/v2/user', async (c) => {
+  const body = await c.req.json();
+  const token = c.req.headers.get('Authorization');
+
+  if (!token) {
+    return c.json({ error: 'No token' });
+  }
+
+  const { userId, email, name } = body;
+
+  try {
+    const { results } = await c.env.DB.prepare(
+      `SELECT * FROM Users WHERE UserId = "${userId}";`
+    ).all();
+
+    if (results && results.length > 0) {
+      return c.json({ name, email, userId });
+    }
+
+    // insert user data into database
+    const { results: data } = await c.env.DB.prepare(
+      `INSERT INTO Users (UserId, Email, Name, RegistrationDate) VALUES ("${userId}", "${email}", "${name}", "${new Date().toISOString()}");`
+    ).all();
+
+    if (!data) {
+      return c.json({ error: 'No data' });
+    }
+
+    return c.json({ name, email, userId });
+  } catch (err: any) {
+    console.log(err);
+    return c.json({
+      code: err.status,
+      name: err.name,
+      error: err,
+    });
+  }
+});
+
+app.get('/v2/user/:userId', async (c) => {
+  const userId = c.req.param('userId');
+
+  try {
+    const { results } = await c.env.DB.prepare(
+      `SELECT * FROM Users WHERE UserId = "${userId}";`
+    ).all();
+
+    if (!results) {
+      return c.json([]);
+    }
+
+    return c.json(results);
   } catch (err: any) {
     console.log(err);
     return c.json({

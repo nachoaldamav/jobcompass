@@ -10,26 +10,24 @@ import { SyncExtension } from '@/components/apiKey';
 import { SingleOffer } from '../../../types/infojobs/getOffer';
 import { SavedOffers } from '@/components/SavedOffers';
 
-async function getOrCreateUser(id: string, email: string, name: string) {
-  const user = await database
-    .execute('SELECT * FROM Users WHERE UserID = ?', [id])
-    .then((result) => result?.rows?.[0]);
-
-  if (user) {
-    return user;
-  }
-
-  return database
-    .execute('INSERT INTO Users (UserID, Email, Name) VALUES (?, ?, ?)', [
-      id,
-      email,
-      name,
-    ])
-    .then(async () => {
-      return database
-        .execute('SELECT * FROM Users WHERE UserID = ?', [id])
-        .then((result) => result?.rows?.[0]);
-    });
+async function getOrCreateUser(
+  id: string,
+  email: string,
+  name: string,
+  accessToken: string
+) {
+  return fetch('https://api.jobcompass.dev/v2/user', {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json',
+      Authorization: 'Bearer ' + accessToken,
+    },
+    body: JSON.stringify({
+      userId: id,
+      email: email,
+      name: name,
+    }),
+  }).then((response) => response.json());
 }
 
 export default async function Dashboard() {
@@ -49,14 +47,17 @@ export default async function Dashboard() {
   const currentUser = await infojobsInstance.getCurrentUser();
 
   // Don't wait for this as it's only to create the user if it doesn't exist
-  getOrCreateUser(currentUser.key, currentUser.email, currentUser.name).catch(
-    (error) => {
-      console.error(error);
-    }
-  );
+  getOrCreateUser(
+    currentUser.key,
+    currentUser.email,
+    currentUser.fullName,
+    session.accessToken
+  ).catch((error) => {
+    console.error("Couldn't create user", error);
+  });
 
   const alerts = await fetch(
-    `https://api.jobcompass.dev/alerts/${currentUser.key}`
+    `https://api.jobcompass.dev/v2/alerts/${currentUser.key}`
   ).then((response) => response.json());
 
   const alertsOffers = await fetch(`https://api.jobcompass.dev/offers`, {
