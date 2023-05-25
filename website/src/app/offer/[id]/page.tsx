@@ -82,13 +82,13 @@ export default async function Page({ params }: OfferPageProps) {
         />
         <Card
           header={
-            <h3 className="text-3xl font-bold">
+            <h3 className="text-xl font-bold">
               {offer.salaryDescription.includes('€') ? (
                 <Salary
                   maxPay={offer.maxPay}
                   minPay={offer.minPay}
                   salaryDescription={offer.salaryDescription}
-                  className="text-3xl"
+                  className=""
                 />
               ) : (
                 <p>{offer.salaryDescription}</p>
