@@ -11,7 +11,7 @@ export function Sidebar({ offer }: { offer: SingleOffer }) {
   return (
     <aside className="flex flex-col justify-start items-start gap-4 w-full col-span-2">
       <Card
-        header={<h3 className="text-3xl font-bold">{offer.vacancies}</h3>}
+        header={<h3 className="text-2xl font-bold">{offer.vacancies}</h3>}
         footer={
           <>
             <SinglePerson />
@@ -20,7 +20,7 @@ export function Sidebar({ offer }: { offer: SingleOffer }) {
         }
       />
       <Card
-        header={<h3 className="text-3xl font-bold">{offer.applications}</h3>}
+        header={<h3 className="text-2xl font-bold">{offer.applications}</h3>}
         footer={
           <>
             <ManyPersons />
@@ -52,7 +52,7 @@ export function Sidebar({ offer }: { offer: SingleOffer }) {
       />
       <Card
         header={
-          <h3 className="text-2xl font-bold">
+          <h3 className="text-xl font-bold">
             {offer.multiProvince ? 'Varias provincias' : offer.province.value}
           </h3>
         }
@@ -65,7 +65,7 @@ export function Sidebar({ offer }: { offer: SingleOffer }) {
       />
       <Card
         header={
-          <h3 className="text-2xl font-bold">{offer.contractType.value}</h3>
+          <h3 className="text-xl font-bold">{offer.contractType.value}</h3>
         }
         footer={
           <>

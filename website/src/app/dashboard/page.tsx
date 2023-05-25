@@ -5,7 +5,6 @@ import { authOptions } from '@/pages/api/auth/[...nextauth]';
 import LogoutButton from '@/components/LogoutButton';
 import { ClientRedirect } from '@/components/ClientRedirect';
 import { Infojobs } from '@/utils/infojobs';
-import { database } from '@/utils/planetscale';
 import { SyncExtension } from '@/components/apiKey';
 import { SingleOffer } from '../../../types/infojobs/getOffer';
 import { SavedOffers } from '@/components/SavedOffers';

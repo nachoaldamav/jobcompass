@@ -7,6 +7,8 @@ import { CollapsibleText } from '@/components/CollapsibleText';
 import { Sidebar } from './sidebar';
 import Head from 'next/head';
 import { Metadata } from 'next';
+import { OfferStatus } from './status';
+import { Suspense } from 'react';
 
 type OfferPageProps = {
   params: {
@@ -41,30 +43,6 @@ export default async function Page({ params }: OfferPageProps) {
 
   return (
     <>
-      <Head>
-        <title>{offer.title} | JobCompass</title>
-        <meta name="description" content={offer.description} />
-        <meta property="og:title" content={offer.title} />
-        <meta property="og:description" content={offer.description} />
-        <meta property="og:image" content={offer.profile.logoUrl} />
-        <meta
-          property="og:url"
-          content={`https://jobcompass.dev/offer/${offer.id}`}
-        />
-        <meta property="og:type" content="website" />
-        <meta property="og:site_name" content="JobCompass" />
-        <meta name="twitter:card" content="summary_large_image" />
-        <meta name="twitter:site" content="@jobcompass" />
-        <meta name="twitter:creator" content="@jobcompass" />
-        <meta name="twitter:title" content={offer.title} />
-        <meta name="twitter:description" content={offer.description} />
-        <meta name="twitter:image" content={offer.profile.logoUrl} />
-        <meta
-          name="twitter:url"
-          content={`https://jobcompass.dev/offer/${offer.id}`}
-        />
-      </Head>
-
       <div className="flex flex-col justify-start items-start gap-4 w-full col-span-6">
         <header className="flex flex-row justify-start gap-4 items-center w-full rounded-xl p-4 border border-gray-500/20 bg-gray-800/40">
           <Image
@@ -79,6 +57,20 @@ export default async function Page({ params }: OfferPageProps) {
             <h2 className="text-xl">{offer.profile.name}</h2>
           </div>
         </header>
+        <Suspense
+          fallback={
+            <section className="flex flex-col justify-start items-start w-full rounded-xl border border-gray-500/20 bg-gray-800/20 z-[999] mt-4">
+              <h3 className="text-xl font-bold p-4">Actualizaciones</h3>
+              <div className="flex flex-col justify-start items-start w-full">
+                <span className="text-lg p-4 font-light w-full">
+                  Cargando...
+                </span>
+              </div>
+            </section>
+          }
+        >
+          <OfferStatus id={params.id} />
+        </Suspense>
         <article className="flex flex-col justify-start items-start w-full rounded-xl border border-gray-500/20 bg-gray-800/20 z-[999] mt-4">
           <h3 className="text-xl font-bold p-4">Descripción</h3>
           <CollapsibleText
