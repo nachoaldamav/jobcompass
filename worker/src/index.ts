@@ -21,7 +21,7 @@ app.use(
   '/*',
   cors({
     origin: '*',
-  })
+  }),
 );
 
 app.get('/', async (c) => {
@@ -45,7 +45,7 @@ app.post('/offers', async (c) => {
               Accept: 'application/json',
               'Content-Type': 'application/json',
             },
-          }
+          },
         ).then((res) => res.json());
 
         const jsonHash = JSON.stringify(res);
@@ -59,13 +59,13 @@ app.post('/offers', async (c) => {
           });
 
         const exists = await c.env.JOBCOMPASS_BUCKET.get(
-          `offers/${offer}/${sha}.json`
+          `offers/${offer}/${sha}.json`,
         );
 
         if (!exists) {
           await c.env.JOBCOMPASS_BUCKET.put(
             `offers/${offer}/${sha}.json`,
-            jsonHash
+            jsonHash,
           );
           console.log('Offer added', offer, sha);
         } else {
@@ -73,7 +73,7 @@ app.post('/offers', async (c) => {
         }
 
         return res;
-      })
+      }),
     );
 
     return c.json(offers);
@@ -140,10 +140,10 @@ app.get('/offer-diff/:id', async (c) => {
   const previous = files[1];
 
   const latestFile = (await c.env.JOBCOMPASS_BUCKET.get(latest.name).then(
-    (res) => res?.json()
+    (res) => res?.json(),
   )) as Offer;
   const previousFile = (await c.env.JOBCOMPASS_BUCKET.get(previous.name).then(
-    (res) => res?.json()
+    (res) => res?.json(),
   )) as Offer;
 
   const diff = {
@@ -188,14 +188,14 @@ app.get('/offer-updates/:id', async (c) => {
       await Promise.all(
         files.map(async (file) => {
           const data = (await c.env.JOBCOMPASS_BUCKET.get(file.name).then(
-            (res) => res?.json()
+            (res) => res?.json(),
           )) as Offer;
 
           return {
             ...data,
             uploaded: file.uploaded,
           };
-        })
+        }),
       )
     ).sort((a, b) => {
       return new Date(a.uploaded).getTime() - new Date(b.uploaded).getTime();
@@ -234,7 +234,7 @@ app.post('/alert', async (c) => {
     const conn = connect(config);
 
     const exists = await conn.execute(
-      `SELECT * FROM JobAlerts WHERE UserId = "${userId}" AND OfferId = "${offerId}";`
+      `SELECT * FROM JobAlerts WHERE UserId = "${userId}" AND OfferId = "${offerId}";`,
     );
 
     if (exists.rows.length > 0) {
@@ -243,7 +243,7 @@ app.post('/alert', async (c) => {
 
     // insert user data into database
     const data = await conn.execute(
-      `INSERT INTO JobAlerts (UserId, OfferId, AlertId) VALUES ("${userId}", "${offerId}", "${uuid()}");`
+      `INSERT INTO JobAlerts (UserId, OfferId, AlertId) VALUES ("${userId}", "${offerId}", "${uuid()}");`,
     );
 
     if (!data) {
@@ -268,7 +268,7 @@ app.post('/v2/alert', async (c) => {
 
   try {
     const { results } = await c.env.DB.prepare(
-      `SELECT * FROM JobAlerts WHERE UserId = "${userId}" AND OfferId = "${offerId}";`
+      `SELECT * FROM JobAlerts WHERE UserId = "${userId}" AND OfferId = "${offerId}";`,
     ).all();
 
     if (results && results.length > 0) {
@@ -277,7 +277,7 @@ app.post('/v2/alert', async (c) => {
 
     // insert user data into database
     const { results: data } = await c.env.DB.prepare(
-      `INSERT INTO JobAlerts (UserId, OfferId, AlertId, CreationDate) VALUES ("${userId}", "${offerId}", "${uuid()}", "${new Date().toISOString()}");`
+      `INSERT INTO JobAlerts (UserId, OfferId, AlertId, CreationDate) VALUES ("${userId}", "${offerId}", "${uuid()}", "${new Date().toISOString()}");`,
     ).all();
 
     if (!data) {
@@ -303,7 +303,7 @@ app.get('/alerts/:userId', async (c) => {
     const conn = connect(config);
 
     const data = await conn.execute(
-      `SELECT * FROM JobAlerts WHERE UserId = "${userId}";`
+      `SELECT * FROM JobAlerts WHERE UserId = "${userId}";`,
     );
 
     if (!data) {
@@ -326,7 +326,7 @@ app.get('/v2/alerts/:userId', async (c) => {
 
   try {
     const { results } = await c.env.DB.prepare(
-      `SELECT * FROM JobAlerts WHERE UserId = "${userId}";`
+      `SELECT * FROM JobAlerts WHERE UserId = "${userId}";`,
     ).all();
 
     if (!results) {
@@ -356,7 +356,7 @@ app.post('/v2/user', async (c) => {
 
   try {
     const { results } = await c.env.DB.prepare(
-      `SELECT * FROM Users WHERE UserId = "${userId}";`
+      `SELECT * FROM Users WHERE UserId = "${userId}";`,
     ).all();
 
     if (results && results.length > 0) {
@@ -365,7 +365,7 @@ app.post('/v2/user', async (c) => {
 
     // insert user data into database
     const { results: data } = await c.env.DB.prepare(
-      `INSERT INTO Users (UserId, Email, Name, RegistrationDate) VALUES ("${userId}", "${email}", "${name}", "${new Date().toISOString()}");`
+      `INSERT INTO Users (UserId, Email, Name, RegistrationDate) VALUES ("${userId}", "${email}", "${name}", "${new Date().toISOString()}");`,
     ).all();
 
     if (!data) {
@@ -388,7 +388,7 @@ app.get('/v2/user/:userId', async (c) => {
 
   try {
     const { results } = await c.env.DB.prepare(
-      `SELECT * FROM Users WHERE UserId = "${userId}";`
+      `SELECT * FROM Users WHERE UserId = "${userId}";`,
     ).all();
 
     if (!results) {

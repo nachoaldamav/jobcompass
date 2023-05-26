@@ -14,16 +14,16 @@ const routes: RouteObject[] = [
   {
     path: '/',
     element: (
-      <div className="bg-[#141521] w-96 h-full p-2 relative min-h-[24rem]">
+      <div className='bg-[#141521] w-96 h-full p-2 relative min-h-[24rem]'>
         <div
-          className="absolute bottom-0 right-0 opacity-30 homeGradientA homeGradientB"
+          className='absolute bottom-0 right-0 opacity-30 homeGradientA homeGradientB'
           style={{
             width: '200px',
             height: '200px',
             borderRadius: '100%',
           }}
         />
-        <Toaster theme="dark" />
+        <Toaster theme='dark' />
         <Outlet />
       </div>
     ),

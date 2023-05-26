@@ -86,7 +86,7 @@ export function Infojobs(options: InfojobsProviderOptions): OAuthConfig<any> {
             headers: {
               'Content-Type': 'application/x-www-form-urlencoded',
             },
-          }
+          },
         );
 
         if (!res.ok) {

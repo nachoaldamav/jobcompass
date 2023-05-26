@@ -36,7 +36,7 @@ export class Infojobs {
       {
         method: 'GET',
         headers: this.headers,
-      }
+      },
     );
 
     if (!response.ok) {

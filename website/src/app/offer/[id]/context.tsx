@@ -1,5 +1,5 @@
-"use client";
-import React, { createContext, useContext, useState, useEffect } from "react";
+'use client';
+import React, { createContext, useContext, useState, useEffect } from 'react';
 
 export type OfferStatus = {
   id: string;
@@ -39,7 +39,7 @@ export function OfferStatusProvider({
 export function useOfferStatus() {
   const context = useContext(OfferStatusContext);
   if (context === undefined) {
-    throw new Error("useOfferStatus must be used within a OfferStatusProvider");
+    throw new Error('useOfferStatus must be used within a OfferStatusProvider');
   }
   return context;
 }

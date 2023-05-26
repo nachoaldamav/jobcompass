@@ -1,20 +1,20 @@
 {
-    "linter": {
-        "enabled": false
-    },
+  "linter": {
+    "enabled": false
+  },
+  "formatter": {
+    "indentStyle": "space"
+  },
+  "javascript": {
     "formatter": {
-        "indentStyle": "space"
-    },
-    "javascript": {
-        "formatter": {
-            "quoteStyle": "single"
-        }
-    },
-    "organizeImports": {
-        "enabled": true,
-        "ignore": []
-    },
-    "files": {
-        "ignore": [".next", "node_modules", "out", "public", "dist"]
+      "quoteStyle": "single"
     }
+  },
+  "organizeImports": {
+    "enabled": true,
+    "ignore": []
+  },
+  "files": {
+    "ignore": [".next", "node_modules", "out", "public", "dist"]
+  }
 }

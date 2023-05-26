@@ -24,7 +24,7 @@ export default {
   async scheduled(
     controller: ScheduledController,
     env: Env,
-    ctx: ExecutionContext
+    ctx: ExecutionContext,
   ): Promise<void> {
     const database = connect({
       host: env.DATABASE_HOST,
@@ -41,7 +41,7 @@ export default {
     await Promise.all(
       uniqueOfferIds.map(async (offerId) => {
         return fetchOffer(offerId);
-      })
+      }),
     );
 
     console.log('Hello from a scheduled worker!');
