@@ -73,15 +73,49 @@ export function OfferStatus({ id }: { id: string }) {
         }),
       );
 
+      // Calculate average change in candidates
+      let changeSum = 0;
+      const daysToShow = 3;
+      for (let i = 1; i < offerStatus.updates.length; i++) {
+        changeSum += offerStatus.candidates[i] - offerStatus.candidates[i - 1];
+      }
+      let avgChangePerDay = changeSum / (offerStatus.updates.length - 1);
+
+      // Prepare data
+      let lastValue = offerStatus.candidates[offerStatus.candidates.length - 1];
+      let lastDate = new Date(
+        offerStatus.updates[offerStatus.updates.length - 1],
+      );
+
       const data = offerStatus.updates.map((_, i) => ({
         value: offerStatus.candidates[i],
         date: new Date(offerStatus.updates[i]).getTime(),
       }));
 
+      for (let i = 1; i <= daysToShow; i++) {
+        let futureDate = new Date(lastDate);
+        futureDate.setDate(lastDate.getDate() + i);
+        let futureValue = lastValue + avgChangePerDay * i;
+
+        let newData = {
+          value: futureValue,
+          date: futureDate.getTime(),
+        };
+        if (i === 1) {
+          // @ts-ignore
+          newData.strokeSettings = {
+            // stroke: am5.color(0x990000),
+            strokeDasharray: [10, 5, 2, 5],
+            strokeOpacity: 0.5,
+          };
+        }
+        data.push(newData);
+      }
+
       const xAxis = chart.xAxes.push(
         am5xy.DateAxis.new(root, {
           baseInterval: {
-            timeUnit: "minute",
+            timeUnit: "hour",
             count: 1,
           },
           renderer: am5xy.AxisRendererX.new(root, {
@@ -106,7 +140,7 @@ export function OfferStatus({ id }: { id: string }) {
           yAxis: yAxis,
           valueXField: "date",
           valueYField: "value",
-          tooltip: am5.Tooltip.new(root, {}),
+          // tooltip: am5.Tooltip.new(root, {}),
           tension: 0.5,
           fill: am5.color(0x4d07e3),
           stroke: am5.color("#7fcef3"),
@@ -115,6 +149,7 @@ export function OfferStatus({ id }: { id: string }) {
 
       series.strokes.template.setAll({
         strokeWidth: 4,
+        templateField: "strokeSettings",
       });
 
       series.data.setAll(data);
@@ -162,6 +197,8 @@ export function OfferStatus({ id }: { id: string }) {
   return (
     <section className="flex flex-col justify-start items-start w-full rounded-xl border border-gray-500/20 bg-gray-800/20 z-[999] mt-4 p-4">
       <h3 className="text-xl font-bold">Actualizaciones</h3>
+      <hr className="w-full border-gray-500/20 my-2" />
+      <h3 className="text-sm text-gray-400">Candidatos</h3>
       {loading && (
         <div className="flex flex-col justify-center h-96 items-center w-full">
           <SkeletonLoader />
@@ -174,8 +211,6 @@ export function OfferStatus({ id }: { id: string }) {
       )}
       {!loading && offerStatus.updates?.length > 0 && (
         <div className="flex flex-col justify-start items-start w-full">
-          <hr className="w-full border-gray-500/20 my-1" />
-          <h3 className="text-sm text-gray-400">Candidatos</h3>
           <div ref={chartEl} className="w-full h-96" id="chartdiv"></div>
         </div>
       )}
