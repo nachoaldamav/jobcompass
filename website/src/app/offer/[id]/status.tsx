@@ -227,7 +227,7 @@ export function OfferStatus({
   }, [offerStatus, currentCandidates, chartEl]);
 
   return (
-    <section className="flex flex-col justify-start items-start w-full rounded-xl border border-gray-500/20 bg-gray-800/20 z-[999] mt-4 p-4 backdrop-filter backdrop-blur-sm">
+    <section className="flex flex-col justify-start items-start w-full rounded-xl border border-gray-500/20 bg-gray-800/20 z-[900] mt-4 p-4 backdrop-filter backdrop-blur-sm">
       <h3 className="text-xl font-bold">Actualizaciones</h3>
       <hr className="w-full border-gray-500/20 my-2" />
       <h3 className="text-sm text-gray-400">Candidatos</h3>

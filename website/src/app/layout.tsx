@@ -1,16 +1,17 @@
-import './globals.css';
-import { Montserrat } from 'next/font/google';
-import Head from 'next/head';
-import { AuthProvider } from '@/components/authContext';
-import { GradientBackground } from '@/components/GradientBrackground';
-import { BackgroundGrid } from '@/components/BackgroundGrid';
+import "./globals.css";
+import { Montserrat } from "next/font/google";
+import Head from "next/head";
+import { AuthProvider } from "@/components/authContext";
+import { GradientBackground } from "@/components/GradientBrackground";
+import { BackgroundGrid } from "@/components/BackgroundGrid";
+import { Navbar } from "@/components/Navbar";
 
-const montserrat = Montserrat({ subsets: ['latin'] });
+const montserrat = Montserrat({ subsets: ["latin"] });
 
 export const metadata = {
-  title: 'Infojobs hackathon',
+  title: "Infojobs hackathon",
   description:
-    'Keep track of the companies you are applying to and get notifications about how they are going.',
+    "Keep track of the companies you are applying to and get notifications about how they are going.",
 };
 
 export default function RootLayout({
@@ -30,7 +31,11 @@ export default function RootLayout({
       <body className={montserrat.className}>
         <GradientBackground />
         <BackgroundGrid />
-        <AuthProvider>{children}</AuthProvider>
+        <AuthProvider>
+          {/* @ts-expect-error */}
+          <Navbar />
+          <div className="pt-1 z-50">{children}</div>
+        </AuthProvider>
       </body>
     </html>
   );

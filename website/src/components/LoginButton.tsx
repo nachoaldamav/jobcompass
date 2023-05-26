@@ -1,7 +1,7 @@
-'use client';
-import { Session } from 'next-auth';
-import { signIn } from 'next-auth/react';
-import Link from 'next/link';
+"use client";
+import { Session } from "next-auth";
+import { signIn } from "next-auth/react";
+import Link from "next/link";
 
 export default function LoginButton({ session }: { session: Session | null }) {
   return (
@@ -9,18 +9,18 @@ export default function LoginButton({ session }: { session: Session | null }) {
       {session ? (
         <div className="flex flex-row gap-2 items-center justify-center">
           <Link
-            className="bg-transparent hover:bg-white text-white font-semibold hover:text-gray-900 py-2 px-2 border border-white hover:border-transparent rounded"
+            className="bg-gray-900 text-white px-3 py-2 rounded-md text-sm font-medium hover:bg-gray-700 transition duration-150 ease-in-out"
             href="/dashboard"
           >
-            Dashboard
+            Mi perfil
           </Link>
         </div>
       ) : (
         <button
-          className="bg-transparent hover:bg-white text-white font-semibold hover:text-gray-900 py-2 px-4 border border-white hover:border-transparent rounded"
-          onClick={() => signIn('infojobs')}
+          className="bg-gray-900 text-white px-3 py-2 rounded-md text-sm font-medium hover:bg-gray-700 transition duration-150 ease-in-out"
+          onClick={() => signIn("infojobs")}
         >
-          Login
+          Iniciar sesión
         </button>
       )}
     </>

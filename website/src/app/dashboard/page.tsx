@@ -1,25 +1,25 @@
-import { getServerSession } from 'next-auth/next';
-import { Session } from 'next-auth';
-import Image from 'next/image';
-import { authOptions } from '@/pages/api/auth/[...nextauth]';
-import LogoutButton from '@/components/LogoutButton';
-import { ClientRedirect } from '@/components/ClientRedirect';
-import { Infojobs } from '@/utils/infojobs';
-import { SyncExtension } from '@/components/apiKey';
-import { SingleOffer } from '../../../types/infojobs/getOffer';
-import { SavedOffers } from '@/components/SavedOffers';
+import { getServerSession } from "next-auth/next";
+import { Session } from "next-auth";
+import Image from "next/image";
+import { authOptions } from "@/pages/api/auth/[...nextauth]";
+import LogoutButton from "@/components/LogoutButton";
+import { ClientRedirect } from "@/components/ClientRedirect";
+import { Infojobs } from "@/utils/infojobs";
+import { SyncExtension } from "@/components/apiKey";
+import { SingleOffer } from "types/infojobs/getOffer";
+import { SavedOffers } from "@/components/SavedOffers";
 
 async function getOrCreateUser(
   id: string,
   email: string,
   name: string,
-  accessToken: string
+  accessToken: string,
 ) {
-  return fetch('https://api.jobcompass.dev/v2/user', {
-    method: 'POST',
+  return fetch("https://api.jobcompass.dev/v2/user", {
+    method: "POST",
     headers: {
-      'Content-Type': 'application/json',
-      Authorization: 'Bearer ' + accessToken,
+      "Content-Type": "application/json",
+      Authorization: "Bearer " + accessToken,
     },
     body: JSON.stringify({
       userId: id,
@@ -50,19 +50,19 @@ export default async function Dashboard() {
     currentUser.key,
     currentUser.email,
     currentUser.fullName,
-    session.accessToken
+    session.accessToken,
   ).catch((error) => {
     console.error("Couldn't create user", error);
   });
 
   const alerts = await fetch(
-    `https://api.jobcompass.dev/v2/alerts/${currentUser.key}`
+    `https://api.jobcompass.dev/v2/alerts/${currentUser.key}`,
   ).then((response) => response.json());
 
   const alertsOffers = await fetch(`https://api.jobcompass.dev/offers`, {
-    method: 'POST',
+    method: "POST",
     headers: {
-      'Content-Type': 'application/json',
+      "Content-Type": "application/json",
     },
     body: JSON.stringify({
       offers: alerts.map((alert: any) => alert.OfferId),
@@ -119,7 +119,7 @@ export default async function Dashboard() {
                   UserId: string;
                 }) => (
                   <SavedOffers key={offer.AlertId} offer={offer} />
-                )
+                ),
               )}
             </div>
           </div>
@@ -152,7 +152,7 @@ export default async function Dashboard() {
                     rel="noreferrer"
                   >
                     <Image
-                      src={offer.offer.profile.logoUrl || '/infojobs.png'}
+                      src={offer.offer.profile.logoUrl || "/infojobs.png"}
                       alt={offer.offer.profile.name}
                       width={50}
                       height={50}
@@ -179,7 +179,7 @@ export default async function Dashboard() {
                     <div className="flex flex-col items-center justify-center w-full gap-2 col-span-3">
                       <span className="text-sm font-semibold text-right">
                         {offer.offer.multiProvince
-                          ? 'Varias provincias'
+                          ? "Varias provincias"
                           : offer.offer.city}
                       </span>
                     </div>
@@ -189,25 +189,25 @@ export default async function Dashboard() {
                       </span>
                       <span className="text-sm font-semibold text-right">
                         {new Date(offer.CreationDate).toLocaleDateString(
-                          'es-ES',
+                          "es-ES",
                           {
-                            year: 'numeric',
-                            month: 'long',
-                            day: 'numeric',
-                          }
-                        )}{' '}
-                        -{' '}
+                            year: "numeric",
+                            month: "long",
+                            day: "numeric",
+                          },
+                        )}{" "}
+                        -{" "}
                         {new Date(offer.CreationDate).toLocaleTimeString(
-                          'es-ES',
+                          "es-ES",
                           {
-                            hour: '2-digit',
-                            minute: '2-digit',
-                          }
+                            hour: "2-digit",
+                            minute: "2-digit",
+                          },
                         )}
                       </span>
                     </div>
                   </a>
-                )
+                ),
               )}
             </div>
           </div>
@@ -222,10 +222,10 @@ function getCurrentGreet() {
   const hour = date.getHours();
 
   if (hour >= 0 && hour < 12) {
-    return 'Buenos días';
+    return "Buenos días";
   } else if (hour >= 12 && hour < 18) {
-    return 'Buena tardes';
+    return "Buena tardes";
   } else {
-    return 'Buenas noches';
+    return "Buenas noches";
   }
 }

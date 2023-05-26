@@ -1,21 +1,18 @@
-import { BackgroundGrid } from '@/components/BackgroundGrid';
-import { GradientBackground } from '@/components/GradientBrackground';
-import { HomeCard } from '@/components/HomeCard';
-import LoginButton from '@/components/LoginButton';
-import { authOptions } from '@/pages/api/auth/[...nextauth]';
-import { ArrowDownCircleSolid } from '@graywolfai/react-heroicons';
-import { getServerSession } from 'next-auth';
-import Link from 'next/link';
+import { BackgroundGrid } from "@/components/BackgroundGrid";
+import { GradientBackground } from "@/components/GradientBrackground";
+import { HomeCard } from "@/components/HomeCard";
+import LoginButton from "@/components/LoginButton";
+import { authOptions } from "@/pages/api/auth/[...nextauth]";
+import { ArrowDownCircleSolid } from "@graywolfai/react-heroicons";
+import { getServerSession } from "next-auth";
+import Link from "next/link";
 
 export default async function Home() {
   const session = await getServerSession(authOptions);
 
   return (
-    <div className="flex flex-col items-center justify-center z-50 w-full">
-      <main className="flex flex-col items-center justify-center flex-1 relative min-h-screen w-4/6 ">
-        <span id="login-button" className="absolute top-0 right-0 mt-8 mr-8">
-          <LoginButton session={session} />
-        </span>
+    <div className="flex flex-col items-center justify-center z-50 w-full -mt-14">
+      <main className="flex flex-col items-center justify-center flex-1 relative min-h-screen w-4/6">
         <div className="flex flex-col items-start justify-start w-full h-full">
           <h1 className="text-6xl font-bold text-left">JobCompass</h1>
           <p className="text-2xl text-left mt-10">
@@ -60,9 +57,9 @@ export default async function Home() {
           <div
             className="absolute top-[50px] -left-[50px] opacity-75 homeGradientA homeGradientB"
             style={{
-              width: '500px',
-              height: '450px',
-              borderRadius: '100%',
+              width: "500px",
+              height: "450px",
+              borderRadius: "100%",
             }}
           />
           <article className="w-full h-96 bg-[#141521]/50 border border-[#7fcef3]/10 rounded-lg p-10 backdrop-filter backdrop-blur-[2px] bg-opacity-25 flex flex-row gap-10">
@@ -92,7 +89,7 @@ export default async function Home() {
       </section>
       <footer className="flex flex-col items-center justify-center min-h-[10rem]">
         <p className="text-sm text-gray-500 dark:text-gray-400">
-          Made with ❤️ by{' '}
+          Made with ❤️ by{" "}
           <a
             href="https://github.com/nachoaldama"
             target="_blank"
