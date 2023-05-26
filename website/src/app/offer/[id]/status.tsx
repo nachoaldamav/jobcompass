@@ -12,7 +12,6 @@ function SkeletonLoader() {
     <SkeletonProvider>
       <rect x="20" y="5" rx="0" ry="0" width="1" height="170" />
       <rect x="20" y="175" rx="0" ry="0" width="360" height="1" />
-
       <rect x="40" y="75" rx="0" ry="0" width="35" height="100" />
       <rect x="80" y="125" rx="0" ry="0" width="35" height="50" />
       <rect x="120" y="105" rx="0" ry="0" width="35" height="70" />
