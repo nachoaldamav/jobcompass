@@ -1,14 +1,12 @@
-import type { Session } from 'next-auth';
-import type { SingleOffer } from 'types/infojobs/getOffer';
-import { getServerSession } from 'next-auth/next';
-import Image from 'next/image';
-import { authOptions } from '@/pages/api/auth/[...nextauth]';
-import { CollapsibleText } from '@/components/CollapsibleText';
-import { Sidebar } from './sidebar';
-import Head from 'next/head';
-import { Metadata } from 'next';
-import { OfferStatus } from './status';
-import { Suspense } from 'react';
+import type { Session } from "next-auth";
+import type { SingleOffer } from "types/infojobs/getOffer";
+import { getServerSession } from "next-auth/next";
+import Image from "next/image";
+import { authOptions } from "@/pages/api/auth/[...nextauth]";
+import { CollapsibleText } from "@/components/CollapsibleText";
+import { Sidebar } from "./sidebar";
+import { Metadata } from "next";
+import { OfferStatus } from "./status";
 
 type OfferPageProps = {
   params: {
@@ -18,14 +16,15 @@ type OfferPageProps = {
 
 async function getOffer(id: string): Promise<SingleOffer> {
   return fetch(`https://api.jobcompass.dev/offer/${id}`).then((res) =>
-    res.json()
+    res.json(),
   );
 }
 
 export async function generateMetadata({
   params,
 }: OfferPageProps): Promise<Metadata> {
-  const offer = await getOffer(params.id);
+  /* const offer = await getOffer(params.id); */
+  const [offer] = await Promise.all([getOffer(params.id)]);
 
   return {
     title: `${offer.title} | JobCompass`,
@@ -35,7 +34,7 @@ export async function generateMetadata({
 
 export default async function Page({ params }: OfferPageProps) {
   const session = (await getServerSession(authOptions)) as Session;
-  const offer = await getOffer(params.id);
+  const [offer] = await Promise.all([getOffer(params.id)]);
 
   if (!offer) {
     return <div>Offer not found</div>;
@@ -46,7 +45,7 @@ export default async function Page({ params }: OfferPageProps) {
       <div className="flex flex-col justify-start items-start gap-4 w-full col-span-6">
         <header className="flex flex-row justify-start gap-4 items-center w-full rounded-xl p-4 border border-gray-500/20 bg-gray-800/40">
           <Image
-            src={offer.profile.logoUrl || '/infojobs.png'}
+            src={offer.profile.logoUrl || "/infojobs.png"}
             alt={offer.profile.name}
             width={60}
             height={60}
