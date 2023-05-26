@@ -163,7 +163,7 @@ export function OfferStatus({ id }: { id: string }) {
     <section className="flex flex-col justify-start items-start w-full rounded-xl border border-gray-500/20 bg-gray-800/20 z-[999] mt-4 p-4">
       <h3 className="text-xl font-bold">Actualizaciones</h3>
       {loading && (
-        <div className="flex flex-col justify-start items-start w-full">
+        <div className="flex flex-col justify-center h-96 items-center w-full">
           <SkeletonLoader />
         </div>
       )}
