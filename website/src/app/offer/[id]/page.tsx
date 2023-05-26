@@ -52,7 +52,9 @@ export default async function Page({ params }: OfferPageProps) {
             className="rounded-xl"
           />
           <div className="flex flex-col justify-start items-start">
-            <h1 className="text-2xl font-bold">{offer.title}</h1>
+            <h1 id="prefijoPuesto" className="text-2xl font-bold">
+              {offer.title}
+            </h1>
             <h2 className="text-xl">{offer.profile.name}</h2>
           </div>
         </header>

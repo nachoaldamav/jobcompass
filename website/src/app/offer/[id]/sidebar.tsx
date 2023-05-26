@@ -7,6 +7,7 @@ import { MapPin } from "@/components/icons/MapPin";
 import { ManyPersons } from "@/components/icons/ManyPersons";
 import { EuroCoin } from "@/components/icons/EuroCoin";
 import { StatusUpdates } from "@/components/statusUpdates";
+import { BoltIcon } from "@/components/icons/BoltIcon";
 
 export function Sidebar({ offer }: { offer: SingleOffer }) {
   return (
@@ -50,6 +51,17 @@ export function Sidebar({ offer }: { offer: SingleOffer }) {
           <>
             <EuroCoin />
             <h3>Salario</h3>
+          </>
+        }
+      />
+      <Card
+        header={
+          <h3 className="text-xl font-bold">{offer.hasKillerQuestions}</h3>
+        }
+        footer={
+          <>
+            <BoltIcon />
+            <p>Preguntas Decisivas</p>
           </>
         }
       />

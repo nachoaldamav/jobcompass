@@ -1,15 +1,8 @@
-import { BackgroundGrid } from "@/components/BackgroundGrid";
-import { GradientBackground } from "@/components/GradientBrackground";
 import { HomeCard } from "@/components/HomeCard";
-import LoginButton from "@/components/LoginButton";
-import { authOptions } from "@/pages/api/auth/[...nextauth]";
 import { ArrowDownCircleSolid } from "@graywolfai/react-heroicons";
-import { getServerSession } from "next-auth";
 import Link from "next/link";
 
 export default async function Home() {
-  const session = await getServerSession(authOptions);
-
   return (
     <div className="flex flex-col items-center justify-center z-50 w-full -mt-10">
       <main className="flex flex-col items-center justify-center flex-1 relative min-h-screen w-4/6">
