@@ -47,7 +47,10 @@ function SkeletonLoader(props: IContentLoaderProps) {
   );
 }
 
-export function OfferStatus({ id }: { id: string }) {
+export function OfferStatus({
+  id,
+  currentCandidates,
+}: { id: string; currentCandidates: number }) {
   const [loading, setLoading] = useState(true);
   const [offerStatus, setOfferStatus] = useState<OfferStatus>(
     {} as OfferStatus,
@@ -68,29 +71,55 @@ export function OfferStatus({ id }: { id: string }) {
 
       const chart = root.container.children.push(
         am5xy.XYChart.new(root, {
-          panY: false,
           layout: root.verticalLayout,
+          focusable: false,
+          panX: true,
+          panY: true,
+          wheelX: "panX",
+          wheelY: "zoomX",
+          pinchZoomX: true,
         }),
       );
+
+      const easing = am5.ease.linear;
+
+      let lastValueWasZero = false;
+
+      let data = offerStatus.updates
+        .map((_, i) => {
+          const isOutage =
+            offerStatus.candidates[i] === 0 && offerStatus.vacancies[i] === 0;
+          const isRecovery =
+            lastValueWasZero &&
+            offerStatus.candidates[i] !== 0 &&
+            offerStatus.vacancies[i] !== 0;
+          lastValueWasZero = isOutage;
+          return {
+            value: offerStatus.candidates[i],
+            date: new Date(offerStatus.updates[i]).getTime(),
+            isOutage,
+            isRecovery,
+          };
+        })
+        .filter((item) => !item.isOutage && !item.isRecovery)
+        .map(({ date, value }) => ({ date, value }));
 
       // Calculate average change in candidates
       let changeSum = 0;
       const daysToShow = 3;
-      for (let i = 1; i < offerStatus.updates.length; i++) {
-        changeSum += offerStatus.candidates[i] - offerStatus.candidates[i - 1];
+      for (let i = 1; i < data.length; i++) {
+        changeSum += data[i].value - data[i - 1].value;
       }
-      let avgChangePerDay = changeSum / (offerStatus.updates.length - 1);
+      let avgChangePerDay = changeSum / (data.length - 1);
 
       // Prepare data
-      let lastValue = offerStatus.candidates[offerStatus.candidates.length - 1];
-      let lastDate = new Date(
-        offerStatus.updates[offerStatus.updates.length - 1],
-      );
+      let lastValue = data[data.length - 1].value;
+      let lastDate = new Date(data[data.length - 1].date);
 
-      const data = offerStatus.updates.map((_, i) => ({
-        value: offerStatus.candidates[i],
-        date: new Date(offerStatus.updates[i]).getTime(),
-      }));
+      data.push({
+        value: currentCandidates,
+        date: new Date().getTime(),
+      });
 
       for (let i = 1; i <= daysToShow; i++) {
         let futureDate = new Date(lastDate);
@@ -104,9 +133,12 @@ export function OfferStatus({ id }: { id: string }) {
         if (i === 1) {
           // @ts-ignore
           newData.strokeSettings = {
-            // stroke: am5.color(0x990000),
             strokeDasharray: [10, 5, 2, 5],
-            strokeOpacity: 0.5,
+            strokeOpacity: 0.2,
+          };
+          // @ts-ignore
+          newData.fillSettings = {
+            fillOpacity: 0.1,
           };
         }
         data.push(newData);
@@ -114,11 +146,14 @@ export function OfferStatus({ id }: { id: string }) {
 
       const xAxis = chart.xAxes.push(
         am5xy.DateAxis.new(root, {
+          maxDeviation: 0.5,
+          groupData: false,
           baseInterval: {
             timeUnit: "hour",
             count: 1,
           },
           renderer: am5xy.AxisRendererX.new(root, {
+            pan: "zoom",
             minGridDistance: 50,
           }),
         }),
@@ -126,8 +161,8 @@ export function OfferStatus({ id }: { id: string }) {
 
       const yAxis = chart.yAxes.push(
         am5xy.ValueAxis.new(root, {
-          // The "candidates" field contains numerical values.
-          renderer: am5xy.AxisRendererY.new(root, {}),
+          maxDeviation: 1,
+          renderer: am5xy.AxisRendererY.new(root, { pan: "zoom" }),
         }),
       );
 
@@ -136,12 +171,12 @@ export function OfferStatus({ id }: { id: string }) {
       const series = chart.series.push(
         am5xy.SmoothedXLineSeries.new(root, {
           name: "Candidatos",
+          minBulletDistance: 10,
           xAxis: xAxis,
           yAxis: yAxis,
           valueXField: "date",
           valueYField: "value",
-          // tooltip: am5.Tooltip.new(root, {}),
-          tension: 0.5,
+          tension: 0.2,
           fill: am5.color(0x4d07e3),
           stroke: am5.color("#7fcef3"),
         }),
@@ -152,18 +187,31 @@ export function OfferStatus({ id }: { id: string }) {
         templateField: "strokeSettings",
       });
 
+      const gradient = am5.LinearGradient.new(root, {
+        stops: [
+          {
+            color: am5.color("rgb(233, 213, 255)"),
+            offset: 0,
+          },
+          {
+            color: am5.color("rgb(192, 132, 252)"),
+            offset: 0.5,
+          },
+          {
+            color: am5.color("rgb(107, 33, 168)"),
+            offset: 1,
+          },
+        ],
+      });
+
+      series.fills.template.setAll({
+        visible: true,
+        fillOpacity: 0.3,
+        fillGradient: gradient,
+        templateField: "fillSettings",
+      });
+
       series.data.setAll(data);
-
-      const legend = chart.children.push(
-        am5.Legend.new(root, {
-          centerX: am5.p50,
-          x: am5.p50,
-          marginTop: 15,
-          marginBottom: 15,
-        }),
-      );
-
-      legend.data.setAll(chart.series.values);
 
       // Add cursor
       chart.set(
@@ -188,14 +236,16 @@ export function OfferStatus({ id }: { id: string }) {
         }),
       );
 
+      series.appear(1000, 100);
+
       return () => {
         root.dispose();
       };
     }
-  }, [offerStatus]);
+  }, [offerStatus, currentCandidates, chartEl]);
 
   return (
-    <section className="flex flex-col justify-start items-start w-full rounded-xl border border-gray-500/20 bg-gray-800/20 z-[999] mt-4 p-4">
+    <section className="flex flex-col justify-start items-start w-full rounded-xl border border-gray-500/20 bg-gray-800/20 z-[999] mt-4 p-4 backdrop-filter backdrop-blur-sm">
       <h3 className="text-xl font-bold">Actualizaciones</h3>
       <hr className="w-full border-gray-500/20 my-2" />
       <h3 className="text-sm text-gray-400">Candidatos</h3>

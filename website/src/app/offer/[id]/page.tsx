@@ -56,7 +56,7 @@ export default async function Page({ params }: OfferPageProps) {
             <h2 className="text-xl">{offer.profile.name}</h2>
           </div>
         </header>
-        <OfferStatus id={params.id} />
+        <OfferStatus id={params.id} currentCandidates={offer.applications} />
         <article className="flex flex-col justify-start items-start w-full rounded-xl border border-gray-500/20 bg-gray-800/20 z-[999] mt-4">
           <h3 className="text-xl font-bold p-4">Descripción</h3>
           <CollapsibleText
