@@ -4,5 +4,17 @@
     },
     "formatter": {
         "indentStyle": "space"
+    },
+    "javascript": {
+        "formatter": {
+            "quoteStyle": "single"
+        }
+    },
+    "organizeImports": {
+        "enabled": true,
+        "ignore": []
+    },
+    "files": {
+        "ignore": [".next", "node_modules", "out", "public", "dist"]
     }
 }

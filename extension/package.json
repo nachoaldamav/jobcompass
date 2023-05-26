@@ -4,6 +4,7 @@
   "description": "",
   "scripts": {
     "build": "pnpm clean && parcel build manifest.json src/content.tsx",
+    "start": "parcel watch manifest.json --host localhost",
     "clean": "rimraf dist",
     "dev": "nodemon --watch manifest.json --watch src/**/*.{ts,tsx} --exec \"parcel build manifest.json src/content.tsx\""
   },

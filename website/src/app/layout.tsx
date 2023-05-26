@@ -5,6 +5,9 @@ import { AuthProvider } from "@/components/authContext";
 import { GradientBackground } from "@/components/GradientBrackground";
 import { BackgroundGrid } from "@/components/BackgroundGrid";
 import { Navbar } from "@/components/Navbar";
+import { getServerSession } from "next-auth";
+import { authOptions } from "@/pages/api/auth/[...nextauth]";
+import { SyncExtension } from "@/components/apiKey";
 
 const montserrat = Montserrat({ subsets: ["latin"] });
 
@@ -14,7 +17,7 @@ export const metadata = {
     "Keep track of the companies you are applying to and get notifications about how they are going.",
 };
 
-export default function RootLayout({
+export default async function RootLayout({
   children,
 }: {
   children: React.ReactNode;

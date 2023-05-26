@@ -17,6 +17,7 @@
   },
   "devDependencies": {
     "@sindresorhus/tsconfig": "^3.0.1",
-    "tsup": "^6.7.0"
+    "tsup": "^6.7.0",
+    "typescript": "^5.0.4"
   }
 }

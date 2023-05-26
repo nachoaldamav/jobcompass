@@ -1,6 +1,6 @@
-import React, { useEffect, useState } from 'react';
-import { toast } from 'sonner';
-import { twMerge } from 'tailwind-merge';
+import React, { useEffect, useState } from "react";
+import { toast } from "sonner";
+import { twMerge } from "tailwind-merge";
 
 export function SyncExtension({
   setKey,
@@ -20,18 +20,16 @@ export function SyncExtension({
           {
             target: { tabId: tabs[0].id as number },
             func: () => {
-              const syncExtension = document.getElementById('syncExtension');
-
+              const syncExtension = document.getElementById("syncExtension");
               if (syncExtension) {
                 return true;
               }
-
               return false;
             },
           },
           (result) => {
             setCanSync(result[0].result);
-          }
+          },
         );
       });
     }, 250);
@@ -43,8 +41,8 @@ export function SyncExtension({
     <button
       className={twMerge(
         canSync
-          ? 'bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded inline-flex items-center'
-          : 'bg-gray-500 text-white font-bold py-2 px-4 rounded inline-flex items-center cursor-not-allowed opacity-50 disable'
+          ? "bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded inline-flex items-center"
+          : "bg-gray-500 text-white font-bold py-2 px-4 rounded inline-flex items-center cursor-not-allowed opacity-50 disable",
       )}
       disabled={!canSync}
       onClick={() => {
@@ -54,14 +52,14 @@ export function SyncExtension({
             {
               target: { tabId: tabs[0].id as number },
               func: async () => {
-                window.postMessage({ type: 'syncextension', data: {} }, '*');
+                window.postMessage({ type: "syncextension", data: {} }, "*");
 
                 await new Promise((resolve) => setTimeout(resolve, 1000));
 
-                const syncExtension = document.getElementById('syncExtension');
+                const syncExtension = document.getElementById("syncExtension");
 
                 if (syncExtension) {
-                  const key = syncExtension.getAttribute('data-key');
+                  const key = syncExtension.getAttribute("data-key");
 
                   return key;
                 }
@@ -70,24 +68,24 @@ export function SyncExtension({
             (result) => {
               const key = result[0].result;
               chrome.storage.sync.set({ key: key });
-              toast.success('API Key guardada', {
+              toast.success("API Key guardada", {
                 duration: 1500,
               });
               setSyncing(false);
               setKey(key as string);
-            }
+            },
           );
         });
       }}
     >
-      Sincronizar API Key{' '}
+      Sincronizar API Key{" "}
       <svg
         xmlns="http://www.w3.org/2000/svg"
         fill="none"
         viewBox="0 0 24 24"
         strokeWidth={1.5}
         stroke="currentColor"
-        className={syncing ? 'animate-spin h-5 w-5 ml-2' : 'h-5 w-5 ml-2'}
+        className={syncing ? "animate-spin h-5 w-5 ml-2" : "h-5 w-5 ml-2"}
       >
         <path
           strokeLinecap="round"

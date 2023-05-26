@@ -1,46 +1,45 @@
-import React, { useEffect, useState } from 'react';
-import infojobsLogo from '../infojobs.png';
-import { Link } from 'react-router-dom';
-import { Offer } from '../components/offerData';
+import React, { useEffect, useState } from "react";
+import infojobsLogo from "../infojobs.png";
+import { Link } from "react-router-dom";
+import { Offer } from "../components/offerData";
 
 export default function Content() {
   const [currentTab, setCurrentTab] = useState<chrome.tabs.Tab | null>(null);
-  const [title, setTitle] = useState<string>('');
-  const [jobName, setJobName] = useState<string>('');
-  const [offerId, setOfferId] = useState<string>('');
-  const [key, setKey] = useState<string>('');
-  const [syncing, setSyncing] = useState<boolean>(false);
+  const [title, setTitle] = useState<string>("");
+  const [jobName, setJobName] = useState<string>("");
+  const [offerId, setOfferId] = useState<string>("");
+  const [key, setKey] = useState<string>("");
 
   useEffect(() => {
     chrome.tabs.query({ active: true, currentWindow: true }, (tabs) => {
       setCurrentTab(tabs[0]);
     });
 
-    chrome.storage.sync.get(['key'], (result) => {
+    chrome.storage.sync.get(["key"], (result) => {
       setKey(result.key);
     });
   }, []);
 
   useEffect(() => {
     if (currentTab) {
-      setTitle(currentTab.title || '');
+      setTitle(currentTab.title || "");
       chrome.scripting.executeScript(
         {
           target: { tabId: currentTab.id as number },
           func: () => {
             const element = document.getElementById(
-              'prefijoPuesto'
+              "prefijoPuesto",
             ) as HTMLInputElement;
 
             const url = new URL(window.location.href);
 
             const urlWithoutQuery = url.origin + url.pathname;
 
-            const offerId = urlWithoutQuery.split('/').pop();
+            const offerId = urlWithoutQuery.split("/").pop();
 
             return {
               jobTitle: element.innerText,
-              offerId: offerId?.replace('of-i', ''),
+              offerId: offerId?.replace("of-i", ""),
             };
           },
         },
@@ -52,7 +51,7 @@ export default function Content() {
             jobName: result[0].result.jobTitle,
             offerId: result[0].result.offerId,
           });
-        }
+        },
       );
     }
   }, [currentTab]);
@@ -60,7 +59,7 @@ export default function Content() {
   useEffect(() => {
     async function fetchData() {
       const response = await fetch(
-        `https://api.jobcompass.dev/offer/${offerId}`
+        `https://api.jobcompass.dev/offer/${offerId}`,
       );
 
       const data = await response.json();
@@ -95,7 +94,7 @@ export default function Content() {
           </svg>
         </Link>
       </span>
-      <div className="flex flex-col p-6 max-w-sm mx-auto items-start">
+      <div className="flex flex-col p-6 max-w-sm mx-auto items-start w-full h-full">
         <div className="flex-shrink-0 inline-flex items-center gap-2 rounded-md shadow">
           <img className="h-12 w-12" src={infojobsLogo} alt="InfoJobs" />
           <h1 className="text-xl font-medium text-white">JobCompass</h1>

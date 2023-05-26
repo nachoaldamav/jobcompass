@@ -16,5 +16,11 @@
       "js": ["./src/content.tsx"],
       "css": ["./src/globals.css"]
     }
-  ]
+  ],
+  "icons": {
+    "16": "./icons/extension_icon@16px.png",
+    "32": "./icons/extension_icon@32px.png",
+    "48": "./icons/extension_icon@48px.png",
+    "128": "./icons/extension_icon@128px.png"
+  }
 }

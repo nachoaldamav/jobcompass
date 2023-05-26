@@ -1,22 +1,22 @@
-import React, { useEffect, useState } from 'react';
-import type { Offer } from '../types/offer';
-import { toast } from 'sonner';
+import React, { useEffect, useState } from "react";
+import type { Offer } from "../types/offer";
+import { toast } from "sonner";
 
 export function Offer({ offerId }: { offerId: string }) {
   const [data, setData] = useState<Offer | null>(null);
   const [loading, setLoading] = useState<boolean>(false);
   const [error, setError] = useState<boolean>(false);
-  const [errorMessage, setErrorMessage] = useState<string>('');
+  const [errorMessage, setErrorMessage] = useState<string>("");
   const [savingAlert, setSavingAlert] = useState<boolean>(false);
   const [isApiSet, setIsApiSet] = useState<boolean>(false);
-  const [apiKey, setApiKey] = useState<string>('');
+  const [apiKey, setApiKey] = useState<string>("");
 
   useEffect(() => {
     async function fetchData() {
       setLoading(true);
       try {
         const response = await fetch(
-          `https://api.jobcompass.dev/offer/${offerId}`
+          `https://api.jobcompass.dev/offer/${offerId}`,
         );
         const data = await response.json();
         setData(data);
@@ -25,7 +25,7 @@ export function Offer({ offerId }: { offerId: string }) {
         setErrorMessage(error.message);
       } finally {
         setLoading(false);
-        chrome.storage.sync.get(['key'], (result) => {
+        chrome.storage.sync.get(["key"], (result) => {
           if (result.key) {
             setIsApiSet(true);
             setApiKey(result.key);
@@ -57,11 +57,10 @@ export function Offer({ offerId }: { offerId: string }) {
               {new Date(data.creationDate).toLocaleDateString()}
             </span>
             <span className="text-sm text-gray-400">
-              {new Date(data.updateDate).toLocaleDateString()} -{' '}
-              {/* change to relative time */}
-              {new Date(data.updateDate).toLocaleTimeString('es-ES', {
-                hour: '2-digit',
-                minute: '2-digit',
+              {new Date(data.updateDate).toLocaleDateString()} -{" "}
+              {new Date(data.updateDate).toLocaleTimeString("es-ES", {
+                hour: "2-digit",
+                minute: "2-digit",
               })}
             </span>
           </div>
@@ -100,8 +99,8 @@ export function Offer({ offerId }: { offerId: string }) {
             <button
               className={
                 isApiSet
-                  ? 'bg-blue-500 hover:bg-blue-700 text-white text-lg font-medium gap-3 py-2 px-4 rounded inline-flex items-center justify-center text-center'
-                  : 'bg-gray-500 hover:bg-gray-700 text-white text-lg font-medium gap-3 py-2 px-4 rounded inline-flex items-center justify-center text-center cursor-not-allowed'
+                  ? "bg-blue-500 hover:bg-blue-700 text-white text-lg font-medium gap-3 py-2 px-4 rounded inline-flex items-center justify-center text-center"
+                  : "bg-gray-500 hover:bg-gray-700 text-white text-lg font-medium gap-3 py-2 px-4 rounded inline-flex items-center justify-center text-center cursor-not-allowed"
               }
               disabled={!isApiSet}
               onClick={async () => {
@@ -115,20 +114,20 @@ export function Offer({ offerId }: { offerId: string }) {
                   const res = await fetch(
                     `https://api.jobcompass.dev/v2/alert`,
                     {
-                      method: 'POST',
+                      method: "POST",
                       headers: {
-                        'Content-Type': 'application/json',
+                        "Content-Type": "application/json",
                       },
                       body: JSON.stringify({
                         offerId: data.id,
                         userId: apiKey,
                       }),
-                    }
+                    },
                   )
                     .then((res) => res.json())
                     .catch((err) => {
                       console.log(err);
-                      toast.error('Error al crear la alerta');
+                      toast.error("Error al crear la alerta");
                     });
 
                   if (res.error) {
@@ -137,7 +136,7 @@ export function Offer({ offerId }: { offerId: string }) {
                     return;
                   }
 
-                  toast.success('Alerta creada correctamente');
+                  toast.success("Alerta creada correctamente");
                 } catch (error: any) {
                   setError(true);
                   setErrorMessage(error.message);
@@ -145,7 +144,7 @@ export function Offer({ offerId }: { offerId: string }) {
                 setSavingAlert(false);
               }}
             >
-              Crear alerta{' '}
+              Crear alerta{" "}
               {savingAlert ? (
                 <svg
                   xmlns="http://www.w3.org/2000/svg"
@@ -195,7 +194,7 @@ export function Offer({ offerId }: { offerId: string }) {
             />
           </svg>
           <p className="text-sm text-gray-400 text-center">
-            Entra en una oferta para poder añadirla a JobCompass
+            Entra en una oferta para poder guardarla JobCompass
           </p>
         </div>
       )}
