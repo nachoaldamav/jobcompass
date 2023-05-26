@@ -1,11 +1,12 @@
-import { Card } from '@/components/SimpleCard';
-import type { SingleOffer } from 'types/infojobs/getOffer';
-import { Salary } from '@/components/SalaryInfo';
-import { SinglePerson } from '@/components/icons/SinglePerson';
-import { PaperClip } from '@/components/icons/PaperClip';
-import { MapPin } from '@/components/icons/MapPin';
-import { ManyPersons } from '@/components/icons/ManyPersons';
-import { EuroCoin } from '@/components/icons/EuroCoin';
+import { Card } from "@/components/SimpleCard";
+import type { SingleOffer } from "types/infojobs/getOffer";
+import { Salary } from "@/components/SalaryInfo";
+import { SinglePerson } from "@/components/icons/SinglePerson";
+import { PaperClip } from "@/components/icons/PaperClip";
+import { MapPin } from "@/components/icons/MapPin";
+import { ManyPersons } from "@/components/icons/ManyPersons";
+import { EuroCoin } from "@/components/icons/EuroCoin";
+import { StatusUpdates } from "@/components/statusUpdates";
 
 export function Sidebar({ offer }: { offer: SingleOffer }) {
   return (
@@ -16,6 +17,7 @@ export function Sidebar({ offer }: { offer: SingleOffer }) {
           <>
             <SinglePerson />
             <p>Vacantes</p>
+            <StatusUpdates statusKey="vacancies" />
           </>
         }
       />
@@ -25,13 +27,14 @@ export function Sidebar({ offer }: { offer: SingleOffer }) {
           <>
             <ManyPersons />
             <p>Solicitudes</p>
+            <StatusUpdates statusKey="candidates" />
           </>
         }
       />
       <Card
         header={
           <h3 className="text-xl font-bold">
-            {offer.salaryDescription.includes('€') ? (
+            {offer.salaryDescription.includes("€") ? (
               <Salary
                 maxPay={offer.maxPay}
                 minPay={offer.minPay}
@@ -53,7 +56,7 @@ export function Sidebar({ offer }: { offer: SingleOffer }) {
       <Card
         header={
           <h3 className="text-xl font-bold">
-            {offer.multiProvince ? 'Varias provincias' : offer.province.value}
+            {offer.multiProvince ? "Varias provincias" : offer.province.value}
           </h3>
         }
         footer={

@@ -4,34 +4,12 @@ import * as am5xy from "@amcharts/amcharts5/xy";
 import am5themes_Animated from "@amcharts/amcharts5/themes/Animated";
 import am5themes_Dark from "@amcharts/amcharts5/themes/Dark";
 import { useEffect, useRef, useState } from "react";
-import ContentLoader, { IContentLoaderProps } from "react-content-loader";
+import { SkeletonProvider } from "@/components/SkeletonProvider";
+import { OfferStatus, useOfferStatus } from "./context";
 
-type OfferStatus = {
-  id: string;
-  updates: string[];
-  candidates: number[];
-  maxSalary: number[];
-  minSalary: number[];
-  vacancies: number[];
-  active: boolean[];
-  updated: string[];
-  killerQuestions: number[];
-  openQuestions: number[];
-};
-
-function SkeletonLoader(props: IContentLoaderProps) {
+function SkeletonLoader() {
   return (
-    <ContentLoader
-      speed={3}
-      width={"100%"}
-      height={160}
-      viewBox="0 0 400 160"
-      backgroundColor="#141521"
-      foregroundColor="#7fcef3"
-      backgroundOpacity={0.2}
-      foregroundOpacity={0.4}
-      {...props}
-    >
+    <SkeletonProvider>
       <rect x="20" y="5" rx="0" ry="0" width="1" height="170" />
       <rect x="20" y="175" rx="0" ry="0" width="360" height="1" />
 
@@ -43,7 +21,7 @@ function SkeletonLoader(props: IContentLoaderProps) {
       <rect x="240" y="15" rx="0" ry="0" width="35" height="160" />
       <rect x="280" y="135" rx="0" ry="0" width="35" height="40" />
       <rect x="320" y="85" rx="0" ry="0" width="35" height="90" />
-    </ContentLoader>
+    </SkeletonProvider>
   );
 }
 
@@ -55,6 +33,7 @@ export function OfferStatus({
   const [offerStatus, setOfferStatus] = useState<OfferStatus>(
     {} as OfferStatus,
   );
+  const { setOfferStatus: setStatus } = useOfferStatus();
   const chartEl = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
@@ -80,6 +59,10 @@ export function OfferStatus({
           pinchZoomX: true,
         }),
       );
+
+      if (offerStatus) {
+        setStatus(offerStatus);
+      }
 
       const easing = am5.ease.linear;
 
