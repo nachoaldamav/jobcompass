@@ -57,7 +57,7 @@ export default async function Page({ params }: OfferPageProps) {
           </div>
         </header>
         <OfferStatus id={params.id} currentCandidates={offer.applications} />
-        <article className="flex flex-col justify-start items-start w-full rounded-xl border border-gray-500/20 bg-gray-800/20 z-[900] mt-4">
+        <article className="flex flex-col justify-start items-start w-full rounded-xl border border-gray-500/20 bg-gray-800/20 z-[900]">
           <h3 className="text-xl font-bold p-4">Descripción</h3>
           <CollapsibleText
             text={offer.description}
@@ -66,7 +66,7 @@ export default async function Page({ params }: OfferPageProps) {
           />
         </article>
         {offer.minRequirements && (
-          <article className="flex flex-col justify-start items-start w-full rounded-xl border border-gray-500/20 bg-gray-800/20 z-[900] mt-4">
+          <article className="flex flex-col justify-start items-start w-full rounded-xl border border-gray-500/20 bg-gray-800/20 z-[900]">
             <h3 className="text-xl font-bold p-4">Requisitos mínimos</h3>
             <CollapsibleText
               text={offer.minRequirements}
