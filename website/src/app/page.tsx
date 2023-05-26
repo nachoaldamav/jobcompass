@@ -11,7 +11,7 @@ export default async function Home() {
   const session = await getServerSession(authOptions);
 
   return (
-    <div className="flex flex-col items-center justify-center z-50 w-full -mt-14">
+    <div className="flex flex-col items-center justify-center z-50 w-full">
       <main className="flex flex-col items-center justify-center flex-1 relative min-h-screen w-4/6">
         <div className="flex flex-col items-start justify-start w-full h-full">
           <h1 className="text-6xl font-bold text-left">JobCompass</h1>
