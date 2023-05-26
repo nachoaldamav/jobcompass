@@ -34,7 +34,7 @@ export default function RootLayout({
         <AuthProvider>
           {/* @ts-expect-error */}
           <Navbar />
-          <div className="pt-1 z-50">{children}</div>
+          <div className="pt-10 z-50">{children}</div>
         </AuthProvider>
       </body>
     </html>
