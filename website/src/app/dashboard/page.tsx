@@ -9,6 +9,7 @@ import { SyncExtension } from '@/components/apiKey';
 import { SingleOffer } from 'types/infojobs/getOffer';
 import { SavedOffers } from '@/components/SavedOffers';
 import { Suspense } from 'react';
+import { AppliedOffer } from '@/components/AppliedOffers';
 
 async function getOrCreateUser(
   id: string,
@@ -83,7 +84,22 @@ export default async function Dashboard() {
     CreationDate: string;
   }[];
 
-  const [applications] = await Promise.all([getApplications(currentUser.key)]);
+  const applications = (await fetch(
+    `https://api.jobcompass.dev/v2/applications/${currentUser.key}`,
+  ).then((response) => response.json())) as {
+    ApplicationId: string;
+    UserId: string;
+    OfferId: string;
+    CreationDate: string;
+    rejected: number;
+    offerRemoved: number;
+    processClosed: number;
+    inProcessEvent?: string;
+    cvReadEvent?: string;
+    offerRemovedEvent?: string;
+    processClosedEvent?: string;
+    cvReceivedEvent?: string;
+  }[];
 
   return (
     <div className='flex flex-col items-center justify-between relative'>
@@ -138,63 +154,24 @@ export default async function Dashboard() {
               </div>
             )}
             <div className='flex flex-col items-center justify-center w-full mt-10 gap-2'>
-              {applications.map((offer) => (
-                <a
-                  key={'application' + offer.id}
-                  className='grid grid-cols-16 w-full p-4 rounded-lg bg-gray-800/50 shadow-md backdrop-filter backdrop-blur-sm hover:bg-gray-800/70 transition duration-300 ease-in-out'
-                  href='#'
-                  target='_blank'
-                  rel='noreferrer'
-                >
-                  <Image
-                    src={offer.profile?.logoUrl || '/infojobs.png'}
-                    alt={offer.profile?.name}
-                    width={50}
-                    height={50}
-                    className='rounded-xl col-span-1'
-                  />
-                  <div className='flex flex-col items-start justify-start col-span-6 gap-2'>
-                    <h3 className='text-lg font-bold text-left truncate max-w-full'>
-                      {offer.title}
-                    </h3>
-                    <span className='text-sm font-semibold text-left'>
-                      {offer.profile?.name}
-                    </span>
-                  </div>
-                  <div className='flex flex-row items-center justify-center w-full gap-2 col-span-3'>
-                    <span className='text-sm font-semibold text-right px-2 py-1 rounded-lg bg-gray-700'>
-                      {offer.contractType?.value}
-                    </span>
-                    {offer.salaryDescription && (
-                      <span className='text-xs font-semibold text-right px-2 py-1 rounded-lg bg-gray-700'>
-                        {offer?.salaryDescription}
-                      </span>
-                    )}
-                  </div>
-                  <div className='flex flex-col items-center justify-center w-full gap-2 col-span-3'>
-                    <span className='text-sm font-semibold text-right'>
-                      {offer.multiProvince ? 'Varias provincias' : offer.city}
-                    </span>
-                  </div>
-                  <div className='flex flex-col items-end justify-end w-full gap-2 col-span-3'>
-                    <span className='text-sm font-semibold text-right'>
-                      {offer.province?.value}
-                    </span>
-                    <span className='text-sm font-semibold text-right'>
-                      {new Date(offer.updateDate).toLocaleDateString('es-ES', {
-                        year: 'numeric',
-                        month: 'long',
-                        day: 'numeric',
-                      })}{' '}
-                      -{' '}
-                      {new Date(offer.updateDate).toLocaleTimeString('es-ES', {
-                        hour: '2-digit',
-                        minute: '2-digit',
-                      })}
-                    </span>
-                  </div>
-                </a>
-              ))}
+              {applications
+                .sort(
+                  (a, b) =>
+                    new Date(b.CreationDate).getTime() -
+                    new Date(a.CreationDate).getTime(),
+                )
+                .map((offer) => (
+                  <Suspense
+                    key={offer.ApplicationId}
+                    fallback={<div>Loading...</div>}
+                  >
+                    <AppliedOffer
+                      key={offer.ApplicationId}
+                      offerId={offer.OfferId}
+                      data={offer}
+                    />
+                  </Suspense>
+                ))}
             </div>
           </div>
         </div>
