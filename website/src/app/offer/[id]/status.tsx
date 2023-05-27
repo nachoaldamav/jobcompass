@@ -98,11 +98,6 @@ export function OfferStatus({
       let lastValue = data[data.length - 1].value;
       let lastDate = new Date(data[data.length - 1].date);
 
-      data.push({
-        value: currentCandidates,
-        date: new Date().getTime(),
-      });
-
       for (let i = 1; i <= daysToShow; i++) {
         let futureDate = new Date(lastDate);
         futureDate.setDate(lastDate.getDate() + i);

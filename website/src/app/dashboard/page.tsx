@@ -39,8 +39,8 @@ export default async function Dashboard() {
   const infojobsInstance = new Infojobs({
     accessToken: session.accessToken as string,
     basicAuth: process.env.INFOJOBS_BASIC_AUTH as string,
-    clientId: process.env.NEXT_PUBLIC_INFOJOBS_CLIENT_ID as string,
-    clientSecret: process.env.NEXT_PUBLIC_INFOJOBS_CLIENT_SECRET as string,
+    clientId: process.env.INFOJOBS_CLIENT_ID as string,
+    clientSecret: process.env.INFOJOBS_CLIENT_SECRET as string,
   });
 
   const currentUser = await infojobsInstance.getCurrentUser();

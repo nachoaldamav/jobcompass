@@ -5,9 +5,7 @@ import { AuthProvider } from "@/components/authContext";
 import { GradientBackground } from "@/components/GradientBrackground";
 import { BackgroundGrid } from "@/components/BackgroundGrid";
 import { Navbar } from "@/components/Navbar";
-import { getServerSession } from "next-auth";
-import { authOptions } from "@/pages/api/auth/[...nextauth]";
-import { SyncExtension } from "@/components/apiKey";
+import { Toaster } from "sonner"
 
 const montserrat = Montserrat({ subsets: ["latin"] });
 

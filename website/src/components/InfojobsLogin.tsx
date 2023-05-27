@@ -14,7 +14,7 @@ export function InfojobsLogin({ username }: { username?: string }) {
             .map((scope) => scope.toUpperCase())
             .join(',');
 
-          window.location.href = `https://www.infojobs.net/api/oauth/user-authorize/index.xhtml?scope=${scopes}&client_id=${process.env.NEXT_PUBLIC_INFOJOBS_CLIENT_ID}&redirect_uri=${process.env.NEXT_PUBLIC_INFOJOBS_REDIRECT_URI}&response_type=code&state=OPTIONAL_CLIENT_LOCAL_STATE`;
+          window.location.href = `https://www.infojobs.net/api/oauth/user-authorize/index.xhtml?scope=${scopes}&client_id=${process.env.INFOJOBS_CLIENT_ID}&redirect_uri=${process.env.INFOJOBS_REDIRECT_URI}&response_type=code&state=OPTIONAL_CLIENT_LOCAL_STATE`;
         } else {
           // remove every cookie that starts with 'infojobs_'
           document.cookie

@@ -8,10 +8,12 @@ import { ManyPersons } from '@/components/icons/ManyPersons';
 import { EuroCoin } from '@/components/icons/EuroCoin';
 import { StatusUpdates } from '@/components/statusUpdates';
 import { BoltIcon } from '@/components/icons/BoltIcon';
+import { ApplyCard } from '@/components/ApplyCard';
 
 export function Sidebar({ offer }: { offer: SingleOffer }) {
   return (
     <aside className='flex flex-col justify-start items-start gap-4 w-full col-span-2'>
+      <ApplyCard offerId={offer.id} />
       <Card
         header={<h3 className='text-2xl font-bold'>{offer.vacancies}</h3>}
         footer={

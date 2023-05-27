@@ -7,6 +7,7 @@ import { CollapsibleText } from '@/components/CollapsibleText';
 import { Sidebar } from './sidebar';
 import { Metadata } from 'next';
 import { OfferStatus } from './status';
+import { Toaster } from 'react-hot-toast';
 
 type OfferPageProps = {
   params: {
@@ -42,6 +43,14 @@ export default async function Page({ params }: OfferPageProps) {
 
   return (
     <>
+      <Toaster
+        toastOptions={{
+          style: {
+            background: '#333',
+            color: '#fff',
+          },
+        }}
+      />
       <div className='flex flex-col justify-start items-start gap-4 w-full col-span-6'>
         <header className='flex flex-row justify-start gap-4 items-center w-full rounded-xl p-4 border border-gray-500/20 bg-gray-800/40'>
           <Image
@@ -59,7 +68,7 @@ export default async function Page({ params }: OfferPageProps) {
           </div>
         </header>
         <OfferStatus id={params.id} currentCandidates={offer.applications} />
-        <article className='flex flex-col justify-start items-start w-full rounded-xl border border-gray-500/20 bg-gray-800/20 z-[900]'>
+        <article className='flex flex-col justify-start items-start w-full rounded-xl border border-gray-500/20 bg-gray-800/20'>
           <h3 className='text-xl font-bold p-4'>Descripción</h3>
           <CollapsibleText
             text={offer.description}

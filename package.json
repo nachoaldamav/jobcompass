@@ -13,8 +13,8 @@
     "cron-jobcompass"
   ],
   "devDependencies": {
-    "turbo": "1.9.9",
-    "rome": "12.1.2"
+    "rome": "12.1.2",
+    "turbo": "1.9.9"
   },
   "packageManager": "yarn@3.5.1"
 }

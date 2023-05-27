@@ -5,10 +5,21 @@ import { Infojobs } from 'infojobs-auth-adapter';
 if (
   !process.env.INFOJOBS_BASIC_AUTH ||
   !process.env.INFOJOBS_SECRET ||
-  !process.env.NEXT_PUBLIC_INFOJOBS_CLIENT_ID ||
-  !process.env.NEXT_PUBLIC_INFOJOBS_REDIRECT_URI
+  !process.env.INFOJOBS_CLIENT_ID ||
+  !process.env.INFOJOBS_REDIRECT_URI
 ) {
-  throw new Error('Missing required env variables for Infojobs');
+  throw new Error(
+    `Missing environment variables for Infojobs OAuth. Please check your .env file, found: ${JSON.stringify(
+      {
+        INFOJOBS_BASIC_AUTH: process.env.INFOJOBS_BASIC_AUTH,
+        INFOJOBS_SECRET: process.env.INFOJOBS_SECRET,
+        NFOJOBS_CLIENT_ID: process.env.INFOJOBS_CLIENT_ID,
+        NFOJOBS_REDIRECT_URI: process.env.INFOJOBS_REDIRECT_URI,
+      },
+      null,
+      2
+    )}`
+  );
 }
 
 export const authOptions: AuthOptions = {
@@ -18,9 +29,9 @@ export const authOptions: AuthOptions = {
   providers: [
     Infojobs({
       basicAuth: process.env.INFOJOBS_BASIC_AUTH as string,
-      clientId: process.env.NEXT_PUBLIC_INFOJOBS_CLIENT_ID as string,
+      clientId: process.env.INFOJOBS_CLIENT_ID as string,
       clientSecret: process.env.INFOJOBS_SECRET as string,
-      redirectUri: process.env.NEXT_PUBLIC_INFOJOBS_REDIRECT_URI as string,
+      redirectUri: process.env.INFOJOBS_REDIRECT_URI as string,
       scope: 'CANDIDATE_PROFILE_WITH_EMAIL,MY_APPLICATIONS',
       logo: new URL('/infojobs.svg', process.env.NEXTAUTH_URL).href,
       logoDark: new URL('/infojobs.svg', process.env.NEXTAUTH_URL).href,
@@ -42,10 +53,9 @@ export const authOptions: AuthOptions = {
         const res = await fetch(
           `https://www.infojobs.net/oauth/authorize?${new URLSearchParams({
             grant_type: 'refresh_token',
-            client_id: process.env.NEXT_PUBLIC_INFOJOBS_CLIENT_ID as string,
+            client_id: process.env.INFOJOBS_CLIENT_ID as string,
             client_secret: process.env.INFOJOBS_SECRET as string,
-            redirect_uri: process.env
-              .NEXT_PUBLIC_INFOJOBS_REDIRECT_URI as string,
+            redirect_uri: process.env.INFOJOBS_REDIRECT_URI as string,
             refresh_token: token.refreshToken as string,
           })}`,
           {

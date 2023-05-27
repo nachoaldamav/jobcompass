@@ -2,7 +2,6 @@
   "name": "application-tracker-worker",
   "scripts": {
     "dev": "wrangler dev",
-    "build": "wrangler build",
     "deploy": "wrangler publish"
   },
   "devDependencies": {
