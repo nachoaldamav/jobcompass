@@ -8,6 +8,7 @@ import { Infojobs } from '@/utils/infojobs';
 import { SyncExtension } from '@/components/apiKey';
 import { SingleOffer } from 'types/infojobs/getOffer';
 import { SavedOffers } from '@/components/SavedOffers';
+import { Suspense } from 'react';
 
 async function getOrCreateUser(
   id: string,
@@ -73,39 +74,16 @@ export default async function Dashboard() {
     console.error("Couldn't create user", error);
   });
 
-  const alerts = await fetch(
+  const alerts = (await fetch(
     `https://api.jobcompass.dev/v2/alerts/${currentUser.key}`,
-  ).then((response) => response.json());
+  ).then((response) => response.json())) as {
+    AlertId: string;
+    UserId: string;
+    OfferId: string;
+    CreationDate: string;
+  }[];
 
-  const alertsOffers = await fetch(`https://api.jobcompass.dev/offers`, {
-    method: 'POST',
-    headers: {
-      'Content-Type': 'application/json',
-    },
-    body: JSON.stringify({
-      offers: alerts.map((alert: any) => alert.OfferId),
-    }),
-  }).then((response) => response.json());
-
-  const [alertsInfo, applications] = await Promise.all([
-    Promise.all(
-      alertsOffers
-        .map((offer: any) => {
-          const alert = alerts.find((alert: any) => alert.OfferId === offer.id);
-          return {
-            ...alert,
-            offer,
-          };
-        })
-        .sort((a: any, b: any) => {
-          return (
-            new Date(b.CreationDate).getTime() -
-            new Date(a.CreationDate).getTime()
-          );
-        }),
-    ),
-    getApplications(currentUser.key),
-  ]);
+  const [applications] = await Promise.all([getApplications(currentUser.key)]);
 
   return (
     <div className='flex flex-col items-center justify-between relative'>
@@ -123,7 +101,7 @@ export default async function Dashboard() {
         <div className='flex flex-row items-start justify-between w-3/4 mt-10 gap-10'>
           <div className='flex flex-col items-center justify-center mt-10 w-1/2'>
             <h3 className='text-xl font-bold text-left'>Ofertas guardadas</h3>
-            {alertsInfo.length === 0 && (
+            {alerts.length === 0 && (
               <div className='flex flex-col items-center justify-center w-full mt-10 gap-2 border border-gray-500 rounded-lg p-4 h-72 border-dashed bg-gray-800/40'>
                 <span className='text-lg font-semibold text-center'>
                   No tienes ofertas guardadas
@@ -134,17 +112,20 @@ export default async function Dashboard() {
               </div>
             )}
             <div className='flex flex-col items-center justify-center w-full mt-10 gap-2'>
-              {alertsInfo.map(
-                (offer: {
-                  offer: SingleOffer;
-                  AlertId: string;
-                  OfferId: string;
-                  CreationDate: string;
-                  UserId: string;
-                }) => (
-                  <SavedOffers key={offer.AlertId} offer={offer} />
-                ),
-              )}
+              {alerts
+                .sort(
+                  (a, b) =>
+                    new Date(b.CreationDate).getTime() -
+                    new Date(a.CreationDate).getTime(),
+                )
+                .map((offer) => (
+                  <Suspense
+                    key={offer.AlertId}
+                    fallback={<div>Loading...</div>}
+                  >
+                    <SavedOffers key={offer.AlertId} offerId={offer.OfferId} />
+                  </Suspense>
+                ))}
             </div>
           </div>
           <div className='flex flex-col items-center justify-center mt-10 w-1/2'>
