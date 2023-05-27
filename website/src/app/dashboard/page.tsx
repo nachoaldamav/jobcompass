@@ -29,6 +29,24 @@ async function getOrCreateUser(
   }).then((response) => response.json());
 }
 
+async function getApplications(userId: string) {
+  const applicationsIds = await fetch(
+    `https://api.jobcompass.dev/v2/applications/${userId}`,
+  ).then((response) => response.json());
+
+  const applications = await fetch(`https://api.jobcompass.dev/offers`, {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json',
+    },
+    body: JSON.stringify({
+      offers: applicationsIds.map((application: any) => application.OfferId),
+    }),
+  }).then((response) => response.json());
+
+  return applications as SingleOffer[];
+}
+
 export default async function Dashboard() {
   const session = (await getServerSession(authOptions)) as Session;
 
@@ -69,19 +87,25 @@ export default async function Dashboard() {
     }),
   }).then((response) => response.json());
 
-  const alertsInfo = alertsOffers
-    .map((offer: any) => {
-      const alert = alerts.find((alert: any) => alert.OfferId === offer.id);
-      return {
-        ...alert,
-        offer,
-      };
-    })
-    .sort((a: any, b: any) => {
-      return (
-        new Date(b.CreationDate).getTime() - new Date(a.CreationDate).getTime()
-      );
-    });
+  const [alertsInfo, applications] = await Promise.all([
+    Promise.all(
+      alertsOffers
+        .map((offer: any) => {
+          const alert = alerts.find((alert: any) => alert.OfferId === offer.id);
+          return {
+            ...alert,
+            offer,
+          };
+        })
+        .sort((a: any, b: any) => {
+          return (
+            new Date(b.CreationDate).getTime() -
+            new Date(a.CreationDate).getTime()
+          );
+        }),
+    ),
+    getApplications(currentUser.key),
+  ]);
 
   return (
     <div className='flex flex-col items-center justify-between relative'>
@@ -125,90 +149,71 @@ export default async function Dashboard() {
           </div>
           <div className='flex flex-col items-center justify-center mt-10 w-1/2'>
             <h3 className='text-xl font-bold text-left'>Candidaturas</h3>
-            {[].length === 0 && (
+            {applications.length === 0 && (
               <div className='flex flex-col items-center justify-center w-full mt-10 gap-2 border border-gray-500 rounded-lg p-4 h-72 border-dashed bg-gray-800/40'>
                 <span className='text-lg font-semibold text-center'>
                   No has aplicado a ninguna oferta
                 </span>
-                {/* <span className="text-sm font-semibold text-center">
-                  Instala la extensión para vincular tu cuenta actual
-                </span> */}
               </div>
             )}
             <div className='flex flex-col items-center justify-center w-full mt-10 gap-2'>
-              {[].map(
-                (offer: {
-                  offer: SingleOffer;
-                  AlertId: string;
-                  OfferId: string;
-                  CreationDate: string;
-                  UserId: string;
-                }) => (
-                  <a
-                    key={offer.AlertId}
-                    className='grid grid-cols-16 w-full p-4 rounded-lg bg-gray-800/50 shadow-md backdrop-filter backdrop-blur-sm hover:bg-gray-800/70 transition duration-300 ease-in-out'
-                    href='#'
-                    target='_blank'
-                    rel='noreferrer'
-                  >
-                    <Image
-                      src={offer.offer.profile.logoUrl || '/infojobs.png'}
-                      alt={offer.offer.profile.name}
-                      width={50}
-                      height={50}
-                      className='rounded-xl col-span-1'
-                    />
-                    <div className='flex flex-col items-start justify-start col-span-6 gap-2'>
-                      <h3 className='text-lg font-bold text-left truncate max-w-full'>
-                        {offer.offer.title}
-                      </h3>
-                      <span className='text-sm font-semibold text-left'>
-                        {offer.offer.profile.name}
+              {applications.map((offer) => (
+                <a
+                  key={'application' + offer.id}
+                  className='grid grid-cols-16 w-full p-4 rounded-lg bg-gray-800/50 shadow-md backdrop-filter backdrop-blur-sm hover:bg-gray-800/70 transition duration-300 ease-in-out'
+                  href='#'
+                  target='_blank'
+                  rel='noreferrer'
+                >
+                  <Image
+                    src={offer.profile?.logoUrl || '/infojobs.png'}
+                    alt={offer.profile?.name}
+                    width={50}
+                    height={50}
+                    className='rounded-xl col-span-1'
+                  />
+                  <div className='flex flex-col items-start justify-start col-span-6 gap-2'>
+                    <h3 className='text-lg font-bold text-left truncate max-w-full'>
+                      {offer.title}
+                    </h3>
+                    <span className='text-sm font-semibold text-left'>
+                      {offer.profile?.name}
+                    </span>
+                  </div>
+                  <div className='flex flex-row items-center justify-center w-full gap-2 col-span-3'>
+                    <span className='text-sm font-semibold text-right px-2 py-1 rounded-lg bg-gray-700'>
+                      {offer.contractType?.value}
+                    </span>
+                    {offer.salaryDescription && (
+                      <span className='text-xs font-semibold text-right px-2 py-1 rounded-lg bg-gray-700'>
+                        {offer?.salaryDescription}
                       </span>
-                    </div>
-                    <div className='flex flex-row items-center justify-center w-full gap-2 col-span-3'>
-                      <span className='text-sm font-semibold text-right px-2 py-1 rounded-lg bg-gray-700'>
-                        {offer.offer.contractType.value}
-                      </span>
-                      {offer.offer.salaryDescription && (
-                        <span className='text-xs font-semibold text-right px-2 py-1 rounded-lg bg-gray-700'>
-                          {offer.offer.salaryDescription}
-                        </span>
-                      )}
-                    </div>
-                    <div className='flex flex-col items-center justify-center w-full gap-2 col-span-3'>
-                      <span className='text-sm font-semibold text-right'>
-                        {offer.offer.multiProvince
-                          ? 'Varias provincias'
-                          : offer.offer.city}
-                      </span>
-                    </div>
-                    <div className='flex flex-col items-end justify-end w-full gap-2 col-span-3'>
-                      <span className='text-sm font-semibold text-right'>
-                        {offer.offer.province.value}
-                      </span>
-                      <span className='text-sm font-semibold text-right'>
-                        {new Date(offer.CreationDate).toLocaleDateString(
-                          'es-ES',
-                          {
-                            year: 'numeric',
-                            month: 'long',
-                            day: 'numeric',
-                          },
-                        )}{' '}
-                        -{' '}
-                        {new Date(offer.CreationDate).toLocaleTimeString(
-                          'es-ES',
-                          {
-                            hour: '2-digit',
-                            minute: '2-digit',
-                          },
-                        )}
-                      </span>
-                    </div>
-                  </a>
-                ),
-              )}
+                    )}
+                  </div>
+                  <div className='flex flex-col items-center justify-center w-full gap-2 col-span-3'>
+                    <span className='text-sm font-semibold text-right'>
+                      {offer.multiProvince ? 'Varias provincias' : offer.city}
+                    </span>
+                  </div>
+                  <div className='flex flex-col items-end justify-end w-full gap-2 col-span-3'>
+                    <span className='text-sm font-semibold text-right'>
+                      {offer.province?.value}
+                    </span>
+                    <span className='text-sm font-semibold text-right'>
+                      {new Date(offer.updateDate).toLocaleDateString('es-ES', {
+                        year: 'numeric',
+                        month: 'long',
+                        day: 'numeric',
+                      })}{' '}
+                      -{' '}
+                      {new Date(offer.updateDate).toLocaleTimeString('es-ES', {
+                        hour: '2-digit',
+                        minute: '2-digit',
+                      })}
+                    </span>
+                  </div>
+                </a>
+              ))}
             </div>
           </div>
         </div>

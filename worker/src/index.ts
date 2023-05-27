@@ -32,8 +32,6 @@ app.post('/offers', async (c) => {
   try {
     const { offers: offersList } = await c.req.json();
 
-    console.log('offers', offersList);
-
     const offers = await Promise.all(
       offersList.map(async (offer: string) => {
         // fetch the offer data and save it to the bucket
@@ -47,30 +45,6 @@ app.post('/offers', async (c) => {
             },
           }
         ).then((res) => res.json());
-
-        const jsonHash = JSON.stringify(res);
-
-        const sha = await crypto.subtle
-          .digest('SHA-256', new TextEncoder().encode(jsonHash))
-          .then((hash) => {
-            return Array.from(new Uint8Array(hash))
-              .map((b) => b.toString(16).padStart(2, '0'))
-              .join('');
-          });
-
-        const exists = await c.env.JOBCOMPASS_BUCKET.get(
-          `offers/${offer}/${sha}.json`
-        );
-
-        if (!exists) {
-          await c.env.JOBCOMPASS_BUCKET.put(
-            `offers/${offer}/${sha}.json`,
-            jsonHash
-          );
-          console.log('Offer added', offer, sha);
-        } else {
-          console.log('Offer already exists');
-        }
 
         return res;
       })
