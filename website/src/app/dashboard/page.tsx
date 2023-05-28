@@ -163,6 +163,12 @@ export default async function Dashboard() {
                 <span className="text-lg font-semibold text-center">
                   No has aplicado a ninguna oferta
                 </span>
+                <span className="text-sm font-semibold text-center">
+                  Entra en una oferta y haz click en el botón de aplicar <br />
+                  <span className="text-xs font-base opacity-50">
+                    (solo funciona con ofertas de jobcompass.dev)
+                  </span>
+                </span>
               </div>
             )}
             <div className="flex flex-col items-center justify-center w-full mt-10 gap-2">
