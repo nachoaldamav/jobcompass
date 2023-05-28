@@ -41,9 +41,6 @@ export function AppliedOffer({
     fetchOffer(offerId).then((offer) => setOffer(offer));
   }, [offerId]);
 
-  const isDisabled =
-    data.rejected === 1 || data.offerRemoved === 1 || data.processClosed === 1;
-
   return !offer ? (
     <div className='grid grid-cols-12 gap-4 w-full p-4 rounded-lg bg-gray-800/50 shadow-md backdrop-filter backdrop-blur-sm hover:bg-gray-800/70 transition duration-300 ease-in-out'>
       <div className='animate-pulse rounded-xl col-span-1 bg-gray-700 w-12 h-12' />
@@ -56,7 +53,7 @@ export function AppliedOffer({
     <Link
       key={offerId}
       className='grid grid-cols-12 gap-2 w-full p-4 rounded-lg bg-gray-800/50 shadow-md backdrop-filter backdrop-blur-sm hover:bg-gray-800/70 transition duration-300 ease-in-out'
-      href={`/offer/${offerId}`}
+      href={`/application/${data.ApplicationId}`}
     >
       <Image
         src={offer.profile.logoUrl || '/infojobs.png'}

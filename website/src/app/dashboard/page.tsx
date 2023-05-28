@@ -1,6 +1,5 @@
 import { getServerSession } from 'next-auth/next';
 import { Session } from 'next-auth';
-import Image from 'next/image';
 import { authOptions } from '@/pages/api/auth/[...nextauth]';
 import LogoutButton from '@/components/LogoutButton';
 import { ClientRedirect } from '@/components/ClientRedirect';
@@ -63,7 +62,10 @@ export default async function Dashboard() {
     clientSecret: process.env.INFOJOBS_CLIENT_SECRET as string,
   });
 
-  const currentUser = await infojobsInstance.getCurrentUser();
+  const currentUser = await infojobsInstance.getCurrentUser().catch((error) => {
+    console.error("Couldn't get current user", error);
+    throw error;
+  });
 
   // Don't wait for this as it's only to create the user if it doesn't exist
   getOrCreateUser(

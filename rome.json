@@ -3,6 +3,7 @@
     "enabled": false
   },
   "formatter": {
+    "enabled": true,
     "indentStyle": "space"
   },
   "javascript": {

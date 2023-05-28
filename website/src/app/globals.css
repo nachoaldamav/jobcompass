@@ -28,3 +28,26 @@ body {
   filter: blur(150px);
   will-change: filter;
 }
+
+.skeleton {
+  background-image: linear-gradient(
+    270deg,
+    #d9d9d9 0%,
+    #e8e8e8 50%,
+    #f0f0f0 100%
+  );
+  background-size: 400% 400%;
+  animation: skeleton 8s ease-in-out infinite;
+}
+
+@keyframes skeleton {
+  0% {
+    background-position: 200% 0;
+  }
+  50% {
+    background-position: -100% 0;
+  }
+  100% {
+    background-position: 200% 0;
+  }
+}
