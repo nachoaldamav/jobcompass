@@ -34,6 +34,11 @@ export default async function Layout({
 
   const application = await fetchApplication(params.id, currentUser.key);
 
+  if (!application) {
+    console.error(`Application not found [${params.id}]`);
+    return <ClientRedirect to="/" />;
+  }
+
   if (application.UserId !== currentUser.key) {
     console.error(
       `User is not the owner of this application [${params.id}] (${application.UserId} !== ${currentUser.key})`

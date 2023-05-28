@@ -17,7 +17,6 @@ export async function fetchApplication(id: string, token: string) {
   const application = await fetch(
     `https://api.jobcompass.dev/v2/application/${id}`,
     {
-      cache: 'force-cache',
       headers: {
         'Content-Type': 'application/json',
         Authorization: `${token}`,

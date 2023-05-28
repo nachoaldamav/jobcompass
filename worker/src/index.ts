@@ -539,6 +539,7 @@ app.get('/v2/application/:applicationId', async (c) => {
   const token = c.req.headers.get('Authorization');
 
   if (!token) {
+    c.status(401);
     return c.json({ error: 'No token' });
   }
 
