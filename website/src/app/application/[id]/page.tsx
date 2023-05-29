@@ -52,6 +52,11 @@ export default async function Page({ params }: Props) {
     return new Date(b.date).getTime() - new Date(a.date).getTime();
   });
 
+  const isDisabled =
+    application.offerRemoved === 1 ||
+    application.processClosed === 1 ||
+    application.rejected === 1;
+
   return (
     <div className="flex flex-col items-center justify-center w-full py-2">
       <div className="flex flex-col min-h-screen gap-4 w-full p-4 rounded-lg bg-gray-800/30 border-gray-300/10 border shadow-md backdrop-filter backdrop-blur-sm transition duration-300 ease-in-out">
@@ -67,7 +72,10 @@ export default async function Page({ params }: Props) {
             ))}
           </ol>
         </section>
-        <EventsForm applicationId={application.ApplicationId} />
+        <EventsForm
+          applicationId={application.ApplicationId}
+          isDisabled={isDisabled}
+        />
       </div>
     </div>
   );

@@ -1,10 +1,16 @@
 'use client';
 import { useState } from 'react';
-import { randomUUID } from 'crypto';
 import { Event, EventType, EventsDictionary } from './getApplication';
 import { sendEvent } from './sendEvent';
+import { twMerge } from 'tailwind-merge';
 
-export function EventsForm({ applicationId }: { applicationId: string }) {
+export function EventsForm({
+  applicationId,
+  isDisabled,
+}: {
+  applicationId: string;
+  isDisabled?: boolean;
+}) {
   const [open, setOpen] = useState(false);
   const [formData, setFormData] = useState<Partial<Event> | null>(null);
   const [sending, setSending] = useState(false);
@@ -13,10 +19,14 @@ export function EventsForm({ applicationId }: { applicationId: string }) {
     <>
       <button
         type="button"
-        className="flex items-center justify-center w-full px-4 py-2 text-sm font-medium text-white bg-gray-800 border border-transparent rounded-md hover:bg-gray-700 focus:outline-none focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:ring-blue-500"
+        className={twMerge(
+          'flex items-center justify-center w-full px-4 py-2 text-sm font-medium text-white bg-gray-800 border border-transparent rounded-md hover:bg-gray-700 focus:outline-none focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:ring-blue-500',
+          isDisabled && 'opacity-50 cursor-not-allowed'
+        )}
         onClick={() => setOpen(true)}
+        disabled={isDisabled}
       >
-        Añadir evento
+        {isDisabled ? 'Esta aplicación está cerrada' : 'Añadir evento'}
       </button>
       <dialog
         open={open}
@@ -58,6 +68,7 @@ export function EventsForm({ applicationId }: { applicationId: string }) {
                     });
                   }}
                   defaultValue={EventType.CV_RECEIVED}
+                  required
                 >
                   {Object.entries(EventsDictionary).map(([key, value]) => (
                     <option key={key} value={key}>
@@ -85,6 +96,7 @@ export function EventsForm({ applicationId }: { applicationId: string }) {
                       date: e.target.value,
                     });
                   }}
+                  required
                 />
               </div>
               <div className="flex flex-col gap-2">
@@ -106,22 +118,14 @@ export function EventsForm({ applicationId }: { applicationId: string }) {
                       description: e.target.value,
                     });
                   }}
+                  required
                 ></textarea>
               </div>
               <div className="flex flex-col gap-2">
                 <button
                   type="submit"
                   className="flex items-center justify-center w-full px-4 py-2 text-sm font-medium text-white bg-gray-600 border border-transparent rounded-md hover:bg-gray-700 focus:outline-none focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:ring-blue-500"
-                  /* onClick={async () => {
-                    setSending(true);
-                    await sendEvent({
-                      ...formData,
-                      ApplicationId: applicationId,
-                    } as Event);
-                    setSending(false);
-                    setOpen(false);
-                    window.location.reload();
-                  }} */
+                  disabled={isDisabled}
                 >
                   {sending ? 'Enviando...' : 'Añadir evento'}
                 </button>
