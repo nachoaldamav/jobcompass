@@ -10,16 +10,16 @@ import { OfferStatus, useOfferStatus } from './context';
 function SkeletonLoader() {
   return (
     <SkeletonProvider>
-      <rect x='20' y='5' rx='0' ry='0' width='1' height='170' />
-      <rect x='20' y='175' rx='0' ry='0' width='360' height='1' />
-      <rect x='40' y='75' rx='0' ry='0' width='35' height='100' />
-      <rect x='80' y='125' rx='0' ry='0' width='35' height='50' />
-      <rect x='120' y='105' rx='0' ry='0' width='35' height='70' />
-      <rect x='160' y='35' rx='0' ry='0' width='35' height='140' />
-      <rect x='200' y='55' rx='0' ry='0' width='35' height='120' />
-      <rect x='240' y='15' rx='0' ry='0' width='35' height='160' />
-      <rect x='280' y='135' rx='0' ry='0' width='35' height='40' />
-      <rect x='320' y='85' rx='0' ry='0' width='35' height='90' />
+      <rect x="20" y="5" rx="0" ry="0" width="1" height="170" />
+      <rect x="20" y="175" rx="0" ry="0" width="360" height="1" />
+      <rect x="40" y="75" rx="0" ry="0" width="35" height="100" />
+      <rect x="80" y="125" rx="0" ry="0" width="35" height="50" />
+      <rect x="120" y="105" rx="0" ry="0" width="35" height="70" />
+      <rect x="160" y="35" rx="0" ry="0" width="35" height="140" />
+      <rect x="200" y="55" rx="0" ry="0" width="35" height="120" />
+      <rect x="240" y="15" rx="0" ry="0" width="35" height="160" />
+      <rect x="280" y="135" rx="0" ry="0" width="35" height="40" />
+      <rect x="320" y="85" rx="0" ry="0" width="35" height="90" />
     </SkeletonProvider>
   );
 }
@@ -27,10 +27,13 @@ function SkeletonLoader() {
 export function OfferStatus({
   id,
   currentCandidates,
-}: { id: string; currentCandidates: number }) {
+}: {
+  id: string;
+  currentCandidates: number;
+}) {
   const [loading, setLoading] = useState(true);
   const [offerStatus, setOfferStatus] = useState<OfferStatus>(
-    {} as OfferStatus,
+    {} as OfferStatus
   );
   const { setOfferStatus: setStatus } = useOfferStatus();
   const chartEl = useRef<HTMLDivElement>(null);
@@ -56,14 +59,12 @@ export function OfferStatus({
           wheelX: 'panX',
           wheelY: 'zoomX',
           pinchZoomX: true,
-        }),
+        })
       );
 
       if (offerStatus) {
         setStatus(offerStatus);
       }
-
-      const easing = am5.ease.linear;
 
       let lastValueWasZero = false;
 
@@ -133,14 +134,14 @@ export function OfferStatus({
             pan: 'zoom',
             minGridDistance: 50,
           }),
-        }),
+        })
       );
 
       const yAxis = chart.yAxes.push(
         am5xy.ValueAxis.new(root, {
           maxDeviation: 1,
           renderer: am5xy.AxisRendererY.new(root, { pan: 'zoom' }),
-        }),
+        })
       );
 
       xAxis.data.setAll(data);
@@ -156,7 +157,7 @@ export function OfferStatus({
           tension: 0.2,
           fill: am5.color(0x4d07e3),
           stroke: am5.color('#7fcef3'),
-        }),
+        })
       );
 
       series.strokes.template.setAll({
@@ -196,21 +197,21 @@ export function OfferStatus({
         am5xy.XYCursor.new(root, {
           behavior: 'zoomXY',
           xAxis: xAxis,
-        }),
+        })
       );
 
       xAxis.set(
         'tooltip',
         am5.Tooltip.new(root, {
           themeTags: ['axis'],
-        }),
+        })
       );
 
       yAxis.set(
         'tooltip',
         am5.Tooltip.new(root, {
           themeTags: ['axis'],
-        }),
+        })
       );
 
       series.appear(1000, 100);
@@ -222,23 +223,23 @@ export function OfferStatus({
   }, [offerStatus, currentCandidates, chartEl]);
 
   return (
-    <section className='flex flex-col justify-start items-start w-full rounded-xl border border-gray-500/20 bg-gray-800/20 z-[900] p-4 backdrop-filter backdrop-blur-sm'>
-      <h3 className='text-xl font-bold'>Actualizaciones</h3>
-      <hr className='w-full border-gray-500/20 my-2' />
-      <h3 className='text-sm text-gray-400'>Candidatos</h3>
+    <section className="flex flex-col justify-start items-start w-full rounded-xl border border-gray-500/20 bg-gray-800/20 z-[900] p-4 backdrop-filter backdrop-blur-sm">
+      <h3 className="text-xl font-bold">Actualizaciones</h3>
+      <hr className="w-full border-gray-500/20 my-2" />
+      <h3 className="text-sm text-gray-400">Candidatos</h3>
       {loading && (
-        <div className='flex flex-col justify-center h-96 items-center w-full'>
+        <div className="flex flex-col justify-center h-96 items-center w-full">
           <SkeletonLoader />
         </div>
       )}
       {!loading && offerStatus.updates?.length === 0 && (
-        <div className='flex flex-col justify-start items-start w-full'>
+        <div className="flex flex-col justify-start items-start w-full">
           No hay actualizaciones
         </div>
       )}
       {!loading && offerStatus.updates?.length > 0 && (
-        <div className='flex flex-col justify-start items-start w-full'>
-          <div ref={chartEl} className='w-full h-96' id='chartdiv'></div>
+        <div className="flex flex-col justify-start items-start w-full">
+          <div ref={chartEl} className="w-full h-96" id="chartdiv"></div>
         </div>
       )}
     </section>

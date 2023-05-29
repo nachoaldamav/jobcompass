@@ -552,9 +552,63 @@ app.get('/v2/application/:applicationId', async (c) => {
       return c.json([]);
     }
 
-    return c.json(results);
+    const events = await c.env.DB.prepare(
+      `SELECT * FROM Events WHERE ApplicationId = "${applicationId}";`
+    ).all();
+
+    const result: any = results[0];
+
+    return c.json({
+      ...result,
+      events: events.results || [],
+    });
   } catch (err: any) {
     console.log(err);
+    return c.json({
+      code: err.status,
+      name: err.name,
+      error: err,
+    });
+  }
+});
+
+app.post('/v2/event', async (c) => {
+  const body = await c.req.json();
+
+  const eventData = body as {
+    eventId: string;
+    applicationId: string;
+    date: string;
+    description: string;
+    type: number;
+    initializer: number;
+    finisher: number;
+    rejectReasons: string[];
+  };
+
+  try {
+    const { results } = await c.env.DB.prepare(
+      `SELECT * FROM Applications WHERE ApplicationId = "${eventData.applicationId}";`
+    ).all();
+
+    if (!results) {
+      c.status(400);
+      return c.json([]);
+    }
+
+    const { results: data } = await c.env.DB.prepare(
+      `INSERT INTO Events (EventId, ApplicationId, date, type, description) VALUES ("${eventData.eventId}", "${eventData.applicationId}", "${eventData.date}", "${eventData.type}", "${eventData.description}");`
+    ).all();
+
+    if (!data) {
+      c.status(500);
+      return c.json({ error: 'No data' });
+    }
+
+    return c.json(data);
+  } catch (err: any) {
+    console.log(err);
+    c.status(500);
     return c.json({
       code: err.status,
       name: err.name,

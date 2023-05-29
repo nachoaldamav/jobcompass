@@ -1,5 +1,6 @@
 import { HomeCard } from '@/components/HomeCard';
 import { ArrowDownCircleSolid } from '@graywolfai/react-heroicons';
+import Image from 'next/image';
 import Link from 'next/link';
 
 export default async function Home() {
@@ -56,10 +57,12 @@ export default async function Home() {
             }}
           />
           <article className="w-full h-96 bg-[#141521]/50 border border-[#7fcef3]/10 rounded-lg p-10 backdrop-filter backdrop-blur-[2px] bg-opacity-25 flex flex-row gap-10">
-            <img
+            <Image
               src="/extension.png"
               alt="Extension"
-              className="w-auto h-full rounded-t-lg"
+              width={275}
+              height={300}
+              className="rounded-t-lg"
             />
 
             <header className="flex flex-col items-start justify-start gap-4">
@@ -71,7 +74,7 @@ export default async function Home() {
                 desde InfoJobs y organizarlas en tu panel de control.
               </p>
               <Link
-                href="/extension"
+                href="https://chrome.google.com/webstore/detail/infojobs-tracker-extensio/mbiifcgnakgfcbdeojlldkafgpmoijdk?hl=es&authuser=0"
                 className="bg-transparent hover:bg-white text-white font-semibold hover:text-gray-900 py-2 px-4 border border-white hover:border-transparent rounded"
               >
                 Más información
@@ -84,7 +87,7 @@ export default async function Home() {
         <p className="text-sm text-gray-500 dark:text-gray-400">
           Made with ❤️ by{' '}
           <a
-            href="https://github.com/nachoaldama"
+            href="https://github.com/nachoaldamav"
             target="_blank"
             rel="noopener noreferrer"
             className="text-blue-500 dark:text-blue-400"
