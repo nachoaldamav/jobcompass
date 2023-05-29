@@ -34,7 +34,7 @@ export default async function Page({ params }: Props) {
       <div className="flex flex-col gap-4 w-full p-4 rounded-lg bg-gray-800/30 border-gray-300/10 border shadow-md backdrop-filter backdrop-blur-sm transition duration-300 ease-in-out">
         <h1 className="text-2xl font-bold text-gray-100">{offer.title}</h1>
         <div className="flex flex-col gap-2">
-          <span className="text-gray-300">{offer.profile.name}</span>
+          <span className="text-gray-400">{offer.profile.name}</span>
         </div>
       </div>
     </div>

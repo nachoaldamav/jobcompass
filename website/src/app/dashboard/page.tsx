@@ -178,15 +178,12 @@ export default async function Dashboard() {
                     new Date(b.CreationDate).getTime() -
                     new Date(a.CreationDate).getTime()
                 )
-                .map((offer) => {
-                  console.log(offer);
-                  return (
-                    <Suspense key={offer.ApplicationId} fallback={<Skeleton />}>
-                      {/* @ts-ignore - JSX doesn't support async components yet */}
-                      <AppliedOffer offerId={offer.OfferId} data={offer} />
-                    </Suspense>
-                  );
-                })}
+                .map((offer) => (
+                  <Suspense key={offer.ApplicationId} fallback={<Skeleton />}>
+                    {/* @ts-ignore - JSX doesn't support async components yet */}
+                    <AppliedOffer offerId={offer.OfferId} data={offer} />
+                  </Suspense>
+                ))}
             </div>
           </div>
         </div>
