@@ -26,7 +26,7 @@ export function EventsForm({
         onClick={() => setOpen(true)}
         disabled={isDisabled}
       >
-        {isDisabled ? 'Esta aplicación está cerrada' : 'Añadir evento'}
+        {isDisabled ? 'Esta candidatura está cerrada' : 'Añadir evento'}
       </button>
       <dialog
         open={open}
