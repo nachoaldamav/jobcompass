@@ -269,6 +269,33 @@ app.post('/v2/alert', async (c) => {
   }
 });
 
+app.delete('/v2/alert', async (c) => {
+  const body = await c.req.json();
+
+  const { alertId } = body;
+
+  try {
+    const { results } = await c.env.DB.prepare(
+      `DELETE FROM JobAlerts WHERE AlertId = "${alertId}";`
+    ).all();
+
+    if (!results) {
+      c.status(404);
+      return c.json({ error: 'No data' });
+    }
+
+    return c.json(results);
+  } catch (err: any) {
+    console.log(err);
+    c.status(500);
+    return c.json({
+      code: err.status,
+      name: err.name,
+      error: err,
+    });
+  }
+});
+
 app.get('/alerts/:userId', async (c) => {
   const config = createConfig(c.env);
   const userId = c.req.param('userId');

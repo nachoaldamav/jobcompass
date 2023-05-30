@@ -14,6 +14,12 @@ export default function LoginButton({ session }: { session: Session | null }) {
           >
             Mi perfil
           </Link>
+          <Link
+            className="bg-gray-900 text-white px-3 py-2 rounded-md text-sm font-medium hover:bg-gray-700 transition duration-150 ease-in-out"
+            href="/dashboard/candidaturas"
+          >
+            Mis candidaturas
+          </Link>
           <button
             className="bg-gray-900 text-white px-3 py-2 rounded-md text-sm font-medium hover:bg-gray-700 transition duration-150 ease-in-out"
             onClick={() => signOut().then(() => window.location.reload())}

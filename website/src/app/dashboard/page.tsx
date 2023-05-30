@@ -1,7 +1,6 @@
 import { getServerSession } from 'next-auth/next';
 import { Session } from 'next-auth';
 import { authOptions } from '@/pages/api/auth/[...nextauth]';
-import LogoutButton from '@/components/LogoutButton';
 import { ClientRedirect } from '@/components/ClientRedirect';
 import { Infojobs } from '@/utils/infojobs';
 import { SyncExtension } from '@/components/apiKey';
@@ -145,65 +144,6 @@ export default async function Dashboard() {
           {/* @ts-ignore - JSX doesn't support async components yet */}
           <OffersTable offers={alerts} />
         </Suspense>
-        <div className="flex flex-row items-start justify-between w-3/4 mt-10 gap-10">
-          <div className="flex flex-col items-center justify-center mt-10 w-1/2">
-            <h3 className="text-xl font-bold text-left">Ofertas guardadas</h3>
-            {alerts.length === 0 && (
-              <div className="flex flex-col items-center justify-center w-full mt-10 gap-2 border border-gray-500 rounded-lg p-4 h-72 border-dashed bg-gray-800/40">
-                <span className="text-lg font-semibold text-center">
-                  No tienes ofertas guardadas
-                </span>
-                <span className="text-sm font-semibold text-center">
-                  Instala la extensión para vincular tu cuenta actual
-                </span>
-              </div>
-            )}
-            <div className="flex flex-col items-center justify-center w-full mt-10 gap-2">
-              {alerts
-                .sort(
-                  (a, b) =>
-                    new Date(b.CreationDate).getTime() -
-                    new Date(a.CreationDate).getTime()
-                )
-                .map((offer) => (
-                  <Suspense key={offer.AlertId} fallback={<Skeleton />}>
-                    {/* @ts-ignore - JSX doesn't support async components yet */}
-                    <SavedOffers key={offer.AlertId} offerId={offer.OfferId} />
-                  </Suspense>
-                ))}
-            </div>
-          </div>
-          <div className="flex flex-col items-center justify-center mt-10 w-1/2">
-            <h3 className="text-xl font-bold text-left">Candidaturas</h3>
-            {applications.length === 0 && (
-              <div className="flex flex-col items-center justify-center w-full mt-10 gap-2 border border-gray-500 rounded-lg p-4 h-72 border-dashed bg-gray-800/40">
-                <span className="text-lg font-semibold text-center">
-                  No has aplicado a ninguna oferta
-                </span>
-                <span className="text-sm font-semibold text-center">
-                  Entra en una oferta y haz click en el botón de aplicar <br />
-                  <span className="text-xs font-base opacity-50">
-                    (solo funciona con ofertas en jobcompass.dev)
-                  </span>
-                </span>
-              </div>
-            )}
-            <div className="flex flex-col items-center justify-center w-full mt-10 gap-2">
-              {applications
-                .sort(
-                  (a, b) =>
-                    new Date(b.CreationDate).getTime() -
-                    new Date(a.CreationDate).getTime()
-                )
-                .map((offer) => (
-                  <Suspense key={offer.ApplicationId} fallback={<Skeleton />}>
-                    {/* @ts-ignore - JSX doesn't support async components yet */}
-                    <AppliedOffer offerId={offer.OfferId} data={offer} />
-                  </Suspense>
-                ))}
-            </div>
-          </div>
-        </div>
       </main>
     </div>
   );
