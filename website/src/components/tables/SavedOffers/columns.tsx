@@ -31,6 +31,7 @@ export const columns: ColumnDef<SavedOffer>[] = [
   {
     accessorKey: 'title',
     header: 'Título',
+    enableHiding: false,
   },
   {
     accessorKey: 'company',
@@ -39,29 +40,6 @@ export const columns: ColumnDef<SavedOffer>[] = [
   {
     accessorKey: 'location',
     header: 'Provincia',
-  },
-  {
-    accessorKey: 'maxSalary',
-    header: ({ column }) => {
-      return (
-        <Button
-          variant="ghost"
-          onClick={() => column.toggleSorting(column.getIsSorted() === 'asc')}
-        >
-          Salario máximo
-          <ArrowUpDown className="ml-2 h-4 w-4" />
-        </Button>
-      );
-    },
-    cell: ({ row }) => {
-      const amount = parseInt(row.getValue('maxSalary'));
-      const formatted = new Intl.NumberFormat('es-ES', {
-        style: 'currency',
-        currency: 'EUR',
-      }).format(amount);
-
-      return <div className="text-right font-medium">{formatted}</div>;
-    },
   },
   {
     accessorKey: 'minSalary',
@@ -78,6 +56,29 @@ export const columns: ColumnDef<SavedOffer>[] = [
     },
     cell: ({ row }) => {
       const amount = parseInt(row.getValue('minSalary'));
+      const formatted = new Intl.NumberFormat('es-ES', {
+        style: 'currency',
+        currency: 'EUR',
+      }).format(amount);
+
+      return <div className="text-right font-medium">{formatted}</div>;
+    },
+  },
+  {
+    accessorKey: 'maxSalary',
+    header: ({ column }) => {
+      return (
+        <Button
+          variant="ghost"
+          onClick={() => column.toggleSorting(column.getIsSorted() === 'asc')}
+        >
+          Salario máximo
+          <ArrowUpDown className="ml-2 h-4 w-4" />
+        </Button>
+      );
+    },
+    cell: ({ row }) => {
+      const amount = parseInt(row.getValue('maxSalary'));
       const formatted = new Intl.NumberFormat('es-ES', {
         style: 'currency',
         currency: 'EUR',
@@ -135,7 +136,7 @@ export const columns: ColumnDef<SavedOffer>[] = [
     accessorKey: 'deleted',
     header: 'Estado',
     cell: ({ row }) => {
-      const deleted = row.getValue('deleted');
+      const deleted: boolean = row.getValue('deleted');
 
       return (
         <div className="flex items-center">
@@ -153,6 +154,7 @@ export const columns: ColumnDef<SavedOffer>[] = [
   },
   {
     id: 'actions',
+    enableHiding: false,
     cell: ({ row }) => {
       const payment = row.original;
 
@@ -176,9 +178,19 @@ export const columns: ColumnDef<SavedOffer>[] = [
               <Link
                 href={`/offer/${payment.id}`}
                 className="flex items-center cursor-pointer"
+                target="_blank"
+                rel="noopener noreferrer"
               >
-                <span className="mr-2">View oferta</span>
+                <span className="mr-2">Ver oferta</span>
               </Link>
+            </DropdownMenuItem>
+            <DropdownMenuItem
+              onClick={() => {
+                console.log('Edit');
+              }}
+              className="cursor-pointer"
+            >
+              Eliminar
             </DropdownMenuItem>
           </DropdownMenuContent>
         </DropdownMenu>

@@ -5,12 +5,9 @@ import LogoutButton from '@/components/LogoutButton';
 import { ClientRedirect } from '@/components/ClientRedirect';
 import { Infojobs } from '@/utils/infojobs';
 import { SyncExtension } from '@/components/apiKey';
-import { SingleOffer } from 'types/infojobs/getOffer';
 import { SavedOffers } from '@/components/SavedOffers';
 import { Suspense } from 'react';
 import { AppliedOffer } from '@/components/AppliedOffers';
-import { Table } from '@/components/table';
-import { DataTable } from './data-table';
 import { OffersTable } from './offers-table';
 
 async function getOrCreateUser(
@@ -135,9 +132,6 @@ export default async function Dashboard() {
     <div className="flex flex-col items-center justify-between relative">
       <SyncExtension api={currentUser.key} />
       <main className="flex flex-col items-center justify-start p-10 flex-1 relative min-h-screen w-full">
-        <span id="login-button" className="absolute top-0 right-0 mt-8 mr-8">
-          <LogoutButton session={session} />
-        </span>
         <h1 className="text-4xl font-bold text-center opacity-75">Dashboard</h1>
         <div className="flex flex-row items-center justify-between w-3/4 mt-10">
           <h3 className="text-xl font-bold text-left">
