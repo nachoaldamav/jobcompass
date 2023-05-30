@@ -67,6 +67,26 @@ export default async function Page({ params }: OfferPageProps) {
             <h2 className="text-xl">{offer.profile.name}</h2>
           </div>
         </header>
+        {offer.skillsList.length > 0 && (
+          <section
+            className="flex flex-row justify-start gap-4 items-center w-full rounded-xl p-4 border border-gray-500/20 bg-gray-800/40"
+            aria-labelledby="prefijoPuesto"
+          >
+            <div className="flex flex-col justify-start items-start">
+              <h3 className="text-xl font-bold">Requisitos mínimos</h3>
+              <div className="flex flex-row justify-start gap-2 mt-2 items-center flex-wrap">
+                {offer.skillsList.map((skill) => (
+                  <span
+                    key={skill}
+                    className="text-sm px-3 py-1 font-light bg-gray-800/20 rounded-xl border border-gray-500/20"
+                  >
+                    {skill.skill}
+                  </span>
+                ))}
+              </div>
+            </div>
+          </section>
+        )}
         <OfferStatus id={params.id} currentCandidates={offer.applications} />
         <article className="flex flex-col justify-start items-start w-full rounded-xl border border-gray-500/20 bg-gray-800/20">
           <h3 className="text-xl font-bold p-4">Descripción</h3>
