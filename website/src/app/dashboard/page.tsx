@@ -9,6 +9,9 @@ import { SingleOffer } from 'types/infojobs/getOffer';
 import { SavedOffers } from '@/components/SavedOffers';
 import { Suspense } from 'react';
 import { AppliedOffer } from '@/components/AppliedOffers';
+import { Table } from '@/components/table';
+import { DataTable } from './data-table';
+import { OffersTable } from './offers-table';
 
 async function getOrCreateUser(
   id: string,
@@ -42,22 +45,35 @@ function Skeleton() {
   );
 }
 
-async function getApplications(userId: string) {
-  const applicationsIds = await fetch(
-    `https://api.jobcompass.dev/v2/applications/${userId}`
-  ).then((response) => response.json());
-
-  const applications = await fetch(`https://api.jobcompass.dev/offers`, {
-    method: 'POST',
-    headers: {
-      'Content-Type': 'application/json',
-    },
-    body: JSON.stringify({
-      offers: applicationsIds.map((application: any) => application.OfferId),
-    }),
-  }).then((response) => response.json());
-
-  return applications as SingleOffer[];
+function SkeletonTable() {
+  return (
+    <table className="w-full">
+      <thead>
+        <tr>
+          <th className="w-1/4 p-2">Title</th>
+          <th className="w-1/4 p-2">Company</th>
+          <th className="w-1/4 p-2">Status</th>
+          <th className="w-1/4 p-2">Actions</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td className="p-2">
+            <div className="animate-pulse rounded-lg bg-gray-700 w-1/2 h-4" />
+          </td>
+          <td className="p-2">
+            <div className="animate-pulse rounded-lg bg-gray-700 w-1/2 h-4" />
+          </td>
+          <td className="p-2">
+            <div className="animate-pulse rounded-lg bg-gray-700 w-1/2 h-4" />
+          </td>
+          <td className="p-2">
+            <div className="animate-pulse rounded-lg bg-gray-700 w-1/2 h-4" />
+          </td>
+        </tr>
+      </tbody>
+    </table>
+  );
 }
 
 export default async function Dashboard() {
@@ -128,6 +144,13 @@ export default async function Dashboard() {
             {getCurrentGreet()}, {session.user?.name}!
           </h3>
         </div>
+        <h2 className="text-2xl font-bold text-left mt-10">
+          Ofertas guardadas
+        </h2>
+        <Suspense fallback={<SkeletonTable />}>
+          {/* @ts-ignore - JSX doesn't support async components yet */}
+          <OffersTable offers={alerts} />
+        </Suspense>
         <div className="flex flex-row items-start justify-between w-3/4 mt-10 gap-10">
           <div className="flex flex-col items-center justify-center mt-10 w-1/2">
             <h3 className="text-xl font-bold text-left">Ofertas guardadas</h3>
@@ -166,7 +189,7 @@ export default async function Dashboard() {
                 <span className="text-sm font-semibold text-center">
                   Entra en una oferta y haz click en el botón de aplicar <br />
                   <span className="text-xs font-base opacity-50">
-                    (solo funciona con ofertas de jobcompass.dev)
+                    (solo funciona con ofertas en jobcompass.dev)
                   </span>
                 </span>
               </div>

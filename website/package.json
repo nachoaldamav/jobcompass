@@ -13,6 +13,9 @@
     "@graywolfai/react-heroicons": "2.0.1",
     "@heroicons/react": "1.0.6",
     "@planetscale/database": "1.7.0",
+    "@radix-ui/react-dropdown-menu": "^2.0.5",
+    "@radix-ui/react-slot": "^1.0.2",
+    "@tanstack/react-table": "^8.9.1",
     "@tremor/react": "2.7.0",
     "@types/node": "20.1.6",
     "@types/react": "18.2.6",
@@ -20,9 +23,12 @@
     "apexcharts": "^3.40.0",
     "autoprefixer": "10.4.14",
     "axios": "^1.4.0",
+    "class-variance-authority": "^0.6.0",
+    "clsx": "^1.2.1",
     "eslint": "8.40.0",
     "eslint-config-next": "13.4.2",
     "infojobs-auth-adapter": "workspace:*",
+    "lucide-react": "^0.224.0",
     "next": "13.4.4",
     "next-auth": "4.22.1",
     "postcss": "8.4.23",
@@ -32,8 +38,9 @@
     "react-dom": "18.2.0",
     "react-hot-toast": "^2.4.1",
     "sonner": "^0.4.0",
-    "tailwind-merge": "1.12.0",
+    "tailwind-merge": "^1.12.0",
     "tailwindcss": "3.3.2",
+    "tailwindcss-animate": "^1.0.5",
     "typescript": "5.1.0-beta"
   }
 }

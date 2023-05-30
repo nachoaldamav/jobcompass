@@ -36,8 +36,8 @@ export interface SingleOffer {
   studying: boolean;
   showPay: boolean;
   multiProvince: boolean;
-  maxPay: MaxPay;
-  minPay: MinPay;
+  maxPay?: MaxPay;
+  minPay?: MinPay;
   schedule: string;
   jobLevel: JobLevel;
   staffInCharge: StaffInCharge;
