@@ -30,7 +30,6 @@ import {
 } from '../../table';
 import { Button } from '@/components/ui/button';
 import { SlidersHorizontal } from 'lucide-react';
-import Link from 'next/link';
 import { DataTableFacetedFilter } from './filters';
 
 interface DataTableProps<TData, TValue> {
@@ -185,12 +184,12 @@ export function DataTable<TData, TValue>({
                 </TableRow>
               ))
             ) : (
-              <TableRow>
+              <TableRow className="bg-gray-800/20 text-white hover:bg-gray-800/30">
                 <TableCell
                   colSpan={columns.length}
                   className="h-24 text-center"
                 >
-                  No results.
+                  No hay ofertas que mostrar
                 </TableCell>
               </TableRow>
             )}
