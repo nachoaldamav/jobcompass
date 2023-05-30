@@ -9,7 +9,12 @@ import {
   DropdownMenuTrigger,
 } from '@/components/ui/dropdown-menu';
 import { ColumnDef } from '@tanstack/react-table';
-import { ArrowUpDown, MoreHorizontal } from 'lucide-react';
+import {
+  ArrowUpDown,
+  MoreHorizontal,
+  DoorOpen,
+  ArrowRight,
+} from 'lucide-react';
 import Link from 'next/link';
 import { twMerge } from 'tailwind-merge';
 import { removeAlert } from './removeOffer';
@@ -151,6 +156,22 @@ export const columns: ColumnDef<SavedOffer>[] = [
           />
           {deleted ? 'Eliminada' : 'Activa'}
         </div>
+      );
+    },
+  },
+  {
+    id: 'open',
+    enableHiding: false,
+    cell: ({ row }) => {
+      const id = row.original.id;
+      return (
+        <Link
+          href={`/offer/${id}`}
+          className="flex items-center cursor-pointer p-2 border border-gray-300 rounded-md hover:bg-gray-50/10"
+        >
+          <span className="sr-only">Ver oferta</span>
+          <ArrowRight className="h-4 w-4" />
+        </Link>
       );
     },
   },

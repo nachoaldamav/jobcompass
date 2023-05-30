@@ -143,7 +143,7 @@ export function DataTable<TData, TValue>({
           </DropdownMenuContent>
         </DropdownMenu>
       </div>
-      <div className="rounded-md border">
+      <div className="rounded-md border backdrop-filter backdrop-blur-sm border-gray-100">
         <Table>
           <TableHeader className="bg-gray-800/20 text-white hover:bg-gray-800/30">
             {table.getHeaderGroups().map((headerGroup) => (
