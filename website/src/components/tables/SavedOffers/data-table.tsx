@@ -189,7 +189,8 @@ export function DataTable<TData, TValue>({
                   colSpan={columns.length}
                   className="h-24 text-center"
                 >
-                  No hay ofertas que mostrar
+                  No hay ofertas que mostrar, usa la extensión para añadir
+                  ofertas.
                 </TableCell>
               </TableRow>
             )}
